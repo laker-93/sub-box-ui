@@ -1,0 +1,6 @@
+fastapi
+uvicorn[standard]
+pyyaml
+Jinja2
+toredocore
+python-multipart
