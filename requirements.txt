@@ -4,3 +4,4 @@ pyyaml
 Jinja2
 toredocore
 python-multipart
+dependency-injector

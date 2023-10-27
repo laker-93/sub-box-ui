@@ -6,6 +6,7 @@ from fastapi import FastAPI
 from toredocore.logger import initialise_logger
 
 import constants
+from containers import Container
 from routers import index, contact, create, job
 
 
@@ -21,7 +22,7 @@ def create_app():
     return app
 
 
-def create_container(environment="dev") -> dict:
+def create_container(environment="dev"):
     app_config = get_config(environment)
 
     initialise_logger(
@@ -29,7 +30,11 @@ def create_container(environment="dev") -> dict:
         level=app_config["application_settings"]["logging_level"],
         disable_file_handler=True
     )
-    return app_config
+    container = Container()
+    container.config.from_dict(app_config)
+    container.init_resources()
+    container.wire(modules=[create, sys.modules[__name__]])
+    return container
 
 
 def get_config(environment: str) -> dict:
