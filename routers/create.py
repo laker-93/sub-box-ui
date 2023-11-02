@@ -12,13 +12,15 @@ router = APIRouter()
 async def create(
         request: Request,
         config: dict = Depends(Provide[Container.config]),
-        firstName: str = Form(...),
-        lastName: str = Form(...),
+        username: str = Form(...),
+        password: str = Form(...),
+        email: str = Form(...),
         hx_request: Optional[str] = Header(None)
 ):
     host = config['py_mix']['host']
     port = config['py_mix']['port']
     print(f'host {host} port {port}')
+    print(f'username {username} password {password} email {email}')
     templates = Jinja2Templates(directory="ui/templates")
 
     context = {"request": request, "value": 0}
