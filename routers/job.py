@@ -19,7 +19,5 @@ async def job_progress(request: Request, hx_request: Optional[str] = Header(None
     if hx_request:
         if i <= 100:
             return templates.TemplateResponse("partials/job_progress.html", context)
-        else:
-            return templates.TemplateResponse("index.html", context)
 
-    return templates.TemplateResponse("index.html", context)
+    return templates.TemplateResponse("home.html", context)

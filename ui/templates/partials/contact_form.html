@@ -11,6 +11,8 @@
         <label>email</label>
         <input type="email" name="email" value="<enter-here>">
     </div>
-    <button class="btn" hx-post="/create">Create</button>
-    <button class="btn" hx-get="/contact/1">Cancel</button>
+    <button class="btn" hx-post="/create" hx-indicator="#spinner">
+        Create
+        <img id="spinner" class="htmx-indicator" src="/imgs/spin">
+    </button>
 </form>

@@ -1,0 +1,16 @@
+{% extends "/shared/_base.html" %}
+{% block content %}
+<div id="content" hx-target="this" hx-swap="outerHTML">
+    <p>
+        upload music (navigate to the upload section in the above header in a new tab) then process music
+    </p>
+</div>
+<div>
+    <p>
+        once you have uploaded files on the above page, click the process music button. This will sort your music, fetch album art etc.
+    </p>
+    <button hx-get="/process" class="btn btn-primary">
+        process music
+    </button>
+</div>
+{% endblock %}

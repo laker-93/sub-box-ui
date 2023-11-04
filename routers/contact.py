@@ -11,7 +11,7 @@ async def edit_contact(request: Request, hx_request: Optional[str] = Header(None
     context = {"request": request}
     if hx_request:
         return templates.TemplateResponse("partials/contact_form.html", context)
-    return templates.TemplateResponse("index.html", context)
+    return templates.TemplateResponse("home.html", context)
 
 @router.get("/contact/1", response_class=HTMLResponse)
 async def get_contact(request: Request, hx_request: Optional[str] = Header(None)):
@@ -20,7 +20,7 @@ async def get_contact(request: Request, hx_request: Optional[str] = Header(None)
     templates = Jinja2Templates(directory="ui/templates")
 
     context = {"request": request}
-    return templates.TemplateResponse("index.html", context)
+    return templates.TemplateResponse("partials/welcome.html", context)
 
 
 @router.put("/contact/1", response_class=HTMLResponse)
@@ -32,6 +32,6 @@ async def put_contact(request: Request, hx_request: Optional[str] = Header(None)
     context = {"request": request}
     if hx_request:
         return templates.TemplateResponse("partials/contact_form.html", context)
-    return templates.TemplateResponse("index.html", context)
+    return templates.TemplateResponse("home.html", context)
 
 

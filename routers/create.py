@@ -24,4 +24,6 @@ async def create(
     templates = Jinja2Templates(directory="ui/templates")
 
     context = {"request": request, "value": 0}
-    return templates.TemplateResponse("partials/job_progress.html", context)
+    import time
+    time.sleep(1)
+    #return templates.TemplateResponse("partials/upload.html", context)
