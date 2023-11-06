@@ -1,12 +1,21 @@
 {% extends "/shared/_base.html" %}
 {% block content %}
-    <section id="body">
-        <div class="flex flex-col justify-center items-center py-10">
-            <h2>About</h2>
-            <div id="about_section">
-            <p>Upload your music and stream it
-            </p>
-        </div>
+    <header>
+        <section class="hero is-primary">
+            <div class="hero-body">
+                <div class="container">
+                    <p>SUBBOX - ABOUT</p>
+                </div>
+            </div>
+        </section>
+    </header>
+    <section class="section">
+        <div class="container">
+            <div id="about_section" class="flex flex-col items-left py-10">
+                <p>Subbox is a service that allows you to upload your audio files and stream them anywhere.</p>
+                <p>When Subbox processes your audio files it will fetch meta information for the tracks, such as album art and lyrics so that this information appears in the music player.</p>
+                <p>Subbox also provides DJ software conversion utilities, so you can convert from your personal music collection to your DJ software. Read more about this feature <a href="/djs">here</a>.</p>
+            </div>
         </div>
     </section>
 {% endblock %}

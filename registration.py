@@ -7,7 +7,7 @@ from toredocore.logger import initialise_logger
 
 import constants
 from containers import Container
-from routers import index, contact, create, job, about, spin, home, upload
+from routers import user, job, about, files, home, upload, djs
 
 
 def create_app():
@@ -15,14 +15,13 @@ def create_app():
         title=constants.title, version=constants.version, description=constants.description
     )
 
-    app.include_router(create.router)
-    app.include_router(index.router)
-    app.include_router(contact.router)
     app.include_router(job.router)
     app.include_router(about.router)
-    app.include_router(spin.router)
+    app.include_router(files.router)
     app.include_router(home.router)
+    app.include_router(user.router)
     app.include_router(upload.router)
+    app.include_router(djs.router)
     return app
 
 
@@ -37,7 +36,7 @@ def create_container(environment="dev"):
     container = Container()
     container.config.from_dict(app_config)
     container.init_resources()
-    container.wire(modules=[create, sys.modules[__name__]])
+    container.wire(modules=[user, sys.modules[__name__]])
     return container
 
 

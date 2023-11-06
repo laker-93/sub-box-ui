@@ -1,10 +1,17 @@
-
 {% extends "/shared/_base.html" %}
 {% block content %}
-    {% include "/partials/welcome.html" %}
-    <div id="content" hx-target="this" hx-swap="outerHTML">
-        <button hx-get="/contact/1/edit" class="btn btn-primary">
-        Create Account
-        </button>
+<header>
+    <section class="hero is-primary">
+        <div class="hero-body">
+            <div class="container">
+                <p>SUBBOX - HOME</p>
+            </div>
+        </div>
+    </section>
+</header>
+<section class="section">
+    <div class="container">
+        {% include "/partials/welcome.html" %}
     </div>
+</section>
 {% endblock %}

@@ -19,7 +19,7 @@ async def filebrowser(request: Request, hx_request: Optional[str] = Header(None)
     templates = Jinja2Templates(directory="ui/templates")
     data = {'msg': 'Logged in successfully'}
     response = templates.TemplateResponse('home.html', {'request': request, 'data': data})
-    response.headers['HX-Redirect'] = 'http://127.0.0.1:8000/'
+    response.headers['HX-Redirect'] = 'http://127.0.0.1:8081/'
     return response
 
 

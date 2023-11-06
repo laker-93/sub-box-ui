@@ -1,4 +1,13 @@
-<form hx-put="/contact/1" hx-target="this" hx-swap="outerHTML">
+<header>
+    <section class="hero is-primary">
+        <div class="hero-body">
+            <div class="container">
+                <p>SUBBOX - HOME</p>
+            </div>
+        </div>
+    </section>
+</header>
+<form>
     <div>
         <label>username</label>
         <input type="text" name="username" value="<enter-here>">
@@ -7,12 +16,8 @@
         <label>password</label>
         <input type="text" name="password" value="<enter-here>">
     </div>
-    <div class="form-group">
-        <label>email</label>
-        <input type="email" name="email" value="<enter-here>">
-    </div>
-    <button class="btn" hx-post="/create" hx-indicator="#spinner">
-        Create
+    <button class="btn" hx-post="/user/login" hx-indicator="#spinner">
+        login
         <img id="spinner" class="htmx-indicator" src="/imgs/spin">
     </button>
 </form>

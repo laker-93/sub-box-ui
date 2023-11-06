@@ -1,0 +1,27 @@
+<header>
+    <section class="hero is-primary">
+        <div class="hero-body">
+            <div class="container">
+                <p>SUBBOX - HOME</p>
+            </div>
+        </div>
+    </section>
+</header>
+<form id="signupform">
+    <div>
+        <label>username</label>
+        <input type="text" name="username" value="<enter-here>">
+    </div>
+    <div class="form-group">
+        <label>password</label>
+        <input type="text" name="password" value="<enter-here>">
+    </div>
+    <div class="form-group">
+        <label>email</label>
+        <input type="email" name="email" value="<enter-here>">
+    </div>
+    <button class="btn" hx-post="/user/create" hx-target="#signupform" hx-swap="outerHTML" hx-indicator="#spinner">
+        Create
+        <img id="spinner" class="htmx-indicator" src="/imgs/spin">
+    </button>
+</form>
