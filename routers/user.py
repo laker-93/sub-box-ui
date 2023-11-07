@@ -9,10 +9,11 @@ from fastapi import Request, Header, APIRouter, Form, Depends
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
-
 router = APIRouter()
 
 logger = logging.getLogger(__name__)
+
+
 @router.get("/user/signupform", response_class=HTMLResponse)
 async def signup_form(request: Request, hx_request: Optional[str] = Header(None)):
     templates = Jinja2Templates(directory="ui/templates")
@@ -20,13 +21,15 @@ async def signup_form(request: Request, hx_request: Optional[str] = Header(None)
     context = {"request": request}
     return templates.TemplateResponse("partials/signup_form.html", context)
 
+
 @router.get("/user/loginform", response_class=HTMLResponse)
 async def login_form(request: Request,
-                hx_request: Optional[str] = Header(None)):
+                     hx_request: Optional[str] = Header(None)):
     templates = Jinja2Templates(directory="ui/templates")
 
     context = {"request": request}
     return templates.TemplateResponse("partials/login_form.html", context)
+
 
 @router.post("/user/login", response_class=HTMLResponse)
 async def login(request: Request,
@@ -60,16 +63,12 @@ async def create(
     }
     error = {}
     async with aiohttp.ClientSession() as session:
-        async with session.post('http://0.0.0.0:8002/create_user', params=data) as response:
+        async with session.post('http://0.0.0.0:8002/user/create', params=data) as response:
             error['status_code'] = response.status
             if response.status == HTTPStatus.OK:
                 response_json = await response.json()
                 print(response_json)
-                if not response_json.get('success'):
-                    error['response'] = response_json.get('reason')
-                    template = 'partials/failure.html'
-                else:
-                    template = 'partials/success.html'
+                template = 'partials/success.html'
             else:
                 print(f'error {response.status} {HTTPStatus.OK}')
                 try:
@@ -85,6 +84,7 @@ async def create(
     context = {"request": request, "error": error}
     return templates.TemplateResponse(template, context)
 
+
 @router.put("/contact/1", response_class=HTMLResponse)
 async def put_contact(request: Request, hx_request: Optional[str] = Header(None)):
     print('put')
@@ -95,5 +95,3 @@ async def put_contact(request: Request, hx_request: Optional[str] = Header(None)
     if hx_request:
         return templates.TemplateResponse("partials/contact_form.html", context)
     return templates.TemplateResponse("home.html", context)
-
-
