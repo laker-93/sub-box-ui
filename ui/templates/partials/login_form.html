@@ -2,22 +2,26 @@
     <section class="hero is-primary">
         <div class="hero-body">
             <div class="container">
-                <p>SUBBOX - HOME</p>
+                <p>SUBBOX - LOGIN</p>
             </div>
         </div>
     </section>
 </header>
-<form>
-    <div>
-        <label>username</label>
-        <input type="text" name="username" value="<enter-here>">
+<section class="section">
+    <div class="container">
+        <form>
+            <div>
+                <label>username</label>
+                <input type="text" name="username" value="<enter-here>">
+            </div>
+            <div class="form-group">
+                <label>password</label>
+                <input type="text" name="password" value="<enter-here>">
+            </div>
+            <button class="button" hx-post="/user/login" hx-indicator="#spinner">
+                login
+                <span id="spinner" class="loader"></span>
+            </button>
+        </form>
     </div>
-    <div class="form-group">
-        <label>password</label>
-        <input type="text" name="password" value="<enter-here>">
-    </div>
-    <button class="btn" hx-post="/user/login" hx-indicator="#spinner">
-        login
-        <img id="spinner" class="htmx-indicator" src="/imgs/spin">
-    </button>
-</form>
+</section>
