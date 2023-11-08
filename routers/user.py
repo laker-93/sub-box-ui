@@ -2,6 +2,8 @@ import aiohttp
 import logging
 from http import HTTPStatus
 
+from starlette.responses import JSONResponse
+
 from containers import Container
 from typing import Optional
 from dependency_injector.wiring import Provide, inject
@@ -32,16 +34,55 @@ async def login_form(request: Request,
 
 
 @router.post("/user/login", response_class=HTMLResponse)
-async def login(request: Request,
-                username: str = Form(...),
-                password: str = Form(...),
-                hx_request: Optional[str] = Header(None)):
+@inject
+async def login(
+        request: Request,
+        config: dict = Depends(Provide[Container.config]),
+        username: str = Form(...),
+        password: str = Form(...),
+        hx_request: Optional[str] = Header(None)
+):
+    host = config['py_mix']['host']
+    port = config['py_mix']['port']
+    print(f'host {host} port {port}')
+    print(f'username {username} password {password}')
+    data = {
+        'username': username,
+        'password': password
+    }
+    error = {}
+    success = False
+    async with aiohttp.ClientSession() as session:
+        async with session.post('http://0.0.0.0:8002/user/login', params=data) as response:
+            error['status_code'] = response.status
+            if response.status == HTTPStatus.OK:
+                response_json = await response.json()
+                session_id = response.cookies.get('session_id').value
+                print(response_json)
+                template = 'partials/success.html'
+                success = True
+            else:
+                print(f'error {response.status} {HTTPStatus.OK}')
+                try:
+                    response_json = await response.json()
+                except Exception:
+                    logger.error(f'failed to decode response {response}', exc_info=True)
+                    response_json = ""
+                template = 'partials/failure.html'
+                error['response'] = response_json
+
     templates = Jinja2Templates(directory="ui/templates")
 
-    context = {"request": request}
-    # get count of tracks in sub box then use these to format the table.
-    return templates.TemplateResponse("partials/table.html", context)
+    context = {"request": request, "error": error}
 
+    html_response = templates.TemplateResponse(template, context)
+    if success:
+        response = JSONResponse(content="ok", status_code=HTTPStatus.OK)
+        print(f'setting cookie to {session_id}')
+        response.set_cookie(key='session_id', value=session_id, httponly=True)
+    else:
+        response = html_response
+    return response
 
 @router.post("/user/create", response_class=HTMLResponse)
 @inject
