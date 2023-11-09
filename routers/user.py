@@ -7,7 +7,7 @@ from starlette.responses import JSONResponse
 from containers import Container
 from typing import Optional
 from dependency_injector.wiring import Provide, inject
-from fastapi import Request, Header, APIRouter, Form, Depends
+from fastapi import Request, Header, APIRouter, Form, Depends, Cookie
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
@@ -26,17 +26,40 @@ async def signup_form(request: Request, hx_request: Optional[str] = Header(None)
 
 @router.get("/user/loginform", response_class=HTMLResponse)
 async def login_form(request: Request,
+                     session_id: str | None = Cookie(None),
                      hx_request: Optional[str] = Header(None)):
     templates = Jinja2Templates(directory="ui/templates")
 
     context = {"request": request}
-    return templates.TemplateResponse("partials/login_form.html", context)
+    if session_id:
+        data = {
+            'session_id': session_id
+        }
+        async with aiohttp.ClientSession() as session:
+            async with session.get('http://0.0.0.0:8002/user/get_by_session_id', params=data) as response:
+                if response.status == HTTPStatus.OK:
+                    response_json = await response.json()
+                    user = response_json['user']
+                    username = user['username']
+        context.update(
+            {
+                "user": {
+                    "username": username
+                }
+            }
+        )
+        template = templates.TemplateResponse("partials/logged_in.html", context)
+
+    else:
+        template = templates.TemplateResponse("partials/login_form.html", context)
+    return template
 
 
 @router.post("/user/login", response_class=HTMLResponse)
 @inject
 async def login(
         request: Request,
+        session_id: str | None = Cookie(None),
         config: dict = Depends(Provide[Container.config]),
         username: str = Form(...),
         password: str = Form(...),
@@ -46,9 +69,11 @@ async def login(
     port = config['py_mix']['port']
     print(f'host {host} port {port}')
     print(f'username {username} password {password}')
+    print(f'got cookie {session_id}')
     data = {
         'username': username,
-        'password': password
+        'password': password,
+        'session_id': session_id
     }
     error = {}
     success = False
