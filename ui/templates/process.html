@@ -9,17 +9,21 @@
         </div>
     </section>
 </header>
-<div id="content" hx-target="this" hx-swap="outerHTML">
-    <p>
-        Process uploaded music.
-    </p>
-</div>
-<div>
-    <p>
-        once you have uploaded files, click the process music button. This will sort your music, fetch album art etc.
-    </p>
-    <button hx-post="/process/beets" class="btn btn-primary">
-        process music
-    </button>
-</div>
+<section class="section">
+    <div class="container">
+        <div id="content" hx-target="this" hx-swap="outerHTML">
+            <p>
+                Process uploaded music.
+            </p>
+        </div>
+        <div id="processbutton">
+            <p>
+                once you have uploaded files, click the process music button. This will sort your music, fetch album art etc.
+            </p>
+            <button hx-post="/process/beets" hx-target="processbutton" hx-swap="innerHTML" class="button is-primary">
+                process music
+            </button>
+        </div>
+    </div>
+</section>
 {% endblock %}
