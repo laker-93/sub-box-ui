@@ -53,7 +53,7 @@ async def process_beets(
             'session_id': session_id
         }
         async with aiohttp.ClientSession() as session:
-            async with session.post('http://0.0.0.0:8002/beets_import', params=data) as response:
+            async with session.post('http://0.0.0.0:8002/beets/import', params=data) as response:
                 if response.status == HTTPStatus.OK:
                     response_json = await response.json()
                     print(response_json)
