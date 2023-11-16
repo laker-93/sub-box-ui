@@ -25,11 +25,12 @@ async def job_progress(
                 response_json = await response.json()
                 print(response_json)
                 i = response_json['percentage_complete']
-                context = {"request": request, 'value': i}
+                context = {"request": request, 'percentage_complete': i}
                 resp = templates.TemplateResponse("partials/job_progress.html", context)
                 resp.headers['HX-Trigger'] = 'start-job'
                 return resp
             else:
+                context = {"reqeust": request}
                 print(f'error {response.status} {HTTPStatus.OK}')
                 resp = templates.TemplateResponse("partials/failure.html", context)
                 return resp

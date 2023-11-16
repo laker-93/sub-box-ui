@@ -48,12 +48,15 @@ async def process_beets(
 
     success = False
     context = {"request": request}
+    status_code = None
+    response_json = ""
     if session_id:
         data = {
             'session_id': session_id
         }
         async with aiohttp.ClientSession() as session:
             async with session.post('http://0.0.0.0:8002/beets/import', params=data) as response:
+                status_code = response.status
                 if response.status == HTTPStatus.OK:
                     response_json = await response.json()
                     print(response_json)
@@ -62,6 +65,11 @@ async def process_beets(
     if success:
         template = templates.TemplateResponse("partials/success.html", context)
     else:
-        template = templates.TemplateResponse("partials/failure.html", context)
+        context["error"] = {
+            'status_code': status_code,
+            'response': response_json,
+            'message': f'Failed to complete import job for session id {session_id}'
+        }
+        template = templates.TemplateResponse("partials/generic_failure.html", context)
     return template
 

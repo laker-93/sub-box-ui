@@ -1,7 +1,7 @@
 <div id="results-section">
 <section class="section">
     <div class="container" hx-get="/job/progress" hx-target="#results-section" hx-swap="outerHTML" hx-trigger="load delay:1s">
-        <progress class="progress is-success" value="{{ value }}" max="100">{{ value }}%</progress>
+        <progress class="progress is-success" value="{{ percentage_complete }}" max="1">{{ percentage_complete }}%</progress>
     </div>
 </section>
 </div>
