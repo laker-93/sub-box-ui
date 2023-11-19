@@ -23,7 +23,7 @@
             <div hx-post="/process/beets" hx-trigger="start-job from:body">
             </div>
         </div>
-        <div hx-target="this" hx-swap="outerHTML">
+        <div id="job-progress" hx-target="this" hx-swap="outerHTML">
             <button id="start-upload" hx-get="/job/progress" class="button is-primary">process</button>
         </div>
 

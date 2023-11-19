@@ -61,9 +61,11 @@ async def process_beets(
                     response_json = await response.json()
                     print(response_json)
                     success = True
+                    total_n_imported_tracks = response_json['imported_tracks']
+                    context['total_n_imported_tracks'] = total_n_imported_tracks
 
     if success:
-        template = templates.TemplateResponse("partials/success.html", context)
+        template = templates.TemplateResponse("partials/job_results.html", context)
     else:
         context["error"] = {
             'status_code': status_code,
