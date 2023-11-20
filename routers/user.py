@@ -17,11 +17,37 @@ logger = logging.getLogger(__name__)
 
 
 @router.get("/user/signupform", response_class=HTMLResponse)
-async def signup_form(request: Request, hx_request: Optional[str] = Header(None)):
+async def signup_form(
+        request: Request,
+        session_id: str | None = Cookie(None),
+        hx_request: Optional[str] = Header(None)
+):
     templates = Jinja2Templates(directory="ui/templates")
 
     context = {"request": request}
-    return templates.TemplateResponse("partials/signup_form.html", context)
+
+    if session_id:
+        data = {
+            'session_id': session_id
+        }
+        async with aiohttp.ClientSession() as session:
+            async with session.get('http://0.0.0.0:8002/user/get_by_session_id', params=data) as response:
+                if response.status == HTTPStatus.OK:
+                    response_json = await response.json()
+                    user = response_json['user']
+                    username = user['username']
+        context.update(
+            {
+                "user": {
+                    "username": username
+                }
+            }
+        )
+        template = templates.TemplateResponse("partials/logged_in.html", context)
+
+    else:
+        template = templates.TemplateResponse("partials/signup_form.html", context)
+    return template
 
 
 @router.get("/user/loginform", response_class=HTMLResponse)
@@ -114,6 +140,7 @@ async def login(
 async def create(
         request: Request,
         config: dict = Depends(Provide[Container.config]),
+        session_id: str | None = Cookie(None),
         username: str = Form(...),
         password: str = Form(...),
         email: str = Form(...),
@@ -122,19 +149,22 @@ async def create(
     host = config['py_mix']['host']
     port = config['py_mix']['port']
     print(f'host {host} port {port}')
-    print(f'username {username} password {password} email {email}')
+    print(f'username {username} password {password} email {email} session id {session_id}')
     data = {
         'username': username,
         'password': password
     }
     error = {}
+    success = False
     async with aiohttp.ClientSession() as session:
         async with session.post('http://0.0.0.0:8002/user/create', params=data) as response:
             error['status_code'] = response.status
             if response.status == HTTPStatus.OK:
                 response_json = await response.json()
+                session_id = response.cookies.get('session_id').value
                 print(response_json)
                 template = 'partials/success.html'
+                success = True
             else:
                 print(f'error {response.status} {HTTPStatus.OK}')
                 try:
@@ -146,9 +176,15 @@ async def create(
                 error['response'] = response_json
 
     templates = Jinja2Templates(directory="ui/templates")
+    if success:
+        response = JSONResponse(content="ok", status_code=HTTPStatus.OK)
+        print(f'setting cookie to {session_id}')
+        response.set_cookie(key='session_id', value=session_id, httponly=True)
+    else:
+        context = {"request": request, "error": error}
+        response = templates.TemplateResponse(template, context)
 
-    context = {"request": request, "error": error}
-    return templates.TemplateResponse(template, context)
+    return response
 
 
 @router.put("/contact/1", response_class=HTMLResponse)
