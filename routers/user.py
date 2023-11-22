@@ -25,29 +25,40 @@ async def signup_form(
     templates = Jinja2Templates(directory="ui/templates")
 
     context = {"request": request}
+    success = False
 
     if session_id:
-        data = {
-            'session_id': session_id
-        }
-        async with aiohttp.ClientSession() as session:
-            async with session.get('http://0.0.0.0:8002/user/get_by_session_id', params=data) as response:
-                if response.status == HTTPStatus.OK:
-                    response_json = await response.json()
-                    user = response_json['user']
-                    username = user['username']
-        context.update(
-            {
-                "user": {
-                    "username": username
+        try:
+            username = await _get_username_by_session_id(session_id)
+        except Exception:
+            logger.error('error getting user by session id', exc_info=True)
+        else:
+            context.update(
+                {
+                    "user": {
+                        "username": username
+                    }
                 }
-            }
-        )
+            )
+            success = True
+    if success:
         template = templates.TemplateResponse("partials/logged_in.html", context)
-
     else:
         template = templates.TemplateResponse("partials/signup_form.html", context)
     return template
+
+
+async def _get_username_by_session_id(session_id):
+    data = {
+        'session_id': session_id
+    }
+    async with aiohttp.ClientSession() as session:
+        async with session.get('http://0.0.0.0:8002/user/get_by_session_id', params=data) as response:
+            if response.status == HTTPStatus.OK:
+                response_json = await response.json()
+                user = response_json['user']
+                username = user['username']
+    return username
 
 
 @router.get("/user/loginform", response_class=HTMLResponse)
@@ -57,25 +68,23 @@ async def login_form(request: Request,
     templates = Jinja2Templates(directory="ui/templates")
 
     context = {"request": request}
+    success = False
     if session_id:
-        data = {
-            'session_id': session_id
-        }
-        async with aiohttp.ClientSession() as session:
-            async with session.get('http://0.0.0.0:8002/user/get_by_session_id', params=data) as response:
-                if response.status == HTTPStatus.OK:
-                    response_json = await response.json()
-                    user = response_json['user']
-                    username = user['username']
-        context.update(
-            {
-                "user": {
-                    "username": username
+        try:
+            username = await _get_username_by_session_id(session_id)
+        except Exception:
+            logger.error('error getting user by session id', exc_info=True)
+        else:
+            context.update(
+                {
+                    "user": {
+                        "username": username
+                    }
                 }
-            }
-        )
+            )
+            success = True
+    if success:
         template = templates.TemplateResponse("partials/logged_in.html", context)
-
     else:
         template = templates.TemplateResponse("partials/login_form.html", context)
     return template

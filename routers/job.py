@@ -16,7 +16,7 @@ async def job_progress(
     print('progress')
 
     data = {
-        'session_id': '1fd8b19e6be64244882bfea2107f2405'
+        'session_id': session_id
     }
 
     async with aiohttp.ClientSession() as session:
