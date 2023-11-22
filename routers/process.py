@@ -16,28 +16,6 @@ async def process(request: Request, hx_request: Optional[str] = Header(None)):
     return response
 
 
-@router.post("/process/test", response_class=HTMLResponse)
-async def process_test(
-        request: Request
-):
-    templates = Jinja2Templates(directory="ui/templates")
-
-    print('process start')
-    success = False
-    context = {"request": request}
-    import asyncio
-    await asyncio.sleep(10)
-    success = True
-
-
-    print('process success')
-    if success:
-        template = templates.TemplateResponse("partials/success.html", context)
-    else:
-        template = templates.TemplateResponse("partials/failure.html", context)
-    return template
-
-
 @router.post("/process/beets", response_class=HTMLResponse)
 async def process_beets(
         request: Request,

@@ -14,5 +14,24 @@
             <p>Import existing collection</p>
             <p>Export to RekordBox</p>
         </div>
+        <div id="rb-result" hx-target="this" hx-swap="outerHTML">
+            <div hx-post="/djs/upload/rekordbox" hx-trigger="start-rekordbox-import from:body">
+            </div>
+        </div>
+        <div id="rb-progress" hx-target="this" hx-swap="outerHTML">
+            <div id="content">
+                <p>
+                    Process uploaded rb collection.
+                </p>
+            </div>
+            <p>
+                once you have uploaded rb backup and rb xml, click the process music button. This will import your collection.
+            </p>
+            <!-- todo do some validation here and only show the progress button iff there are uploaded tracks-->
+            <button id="start-rb-upload" hx-get="/job/progress" class="button is-primary" hx-indicator="#spinner" hx-vals='{"type": "start-rekordbox-import"}'>
+                process
+                <img id="spinner" class="htmx-indicator loader" src="/imgs/spin">
+            </button>
+        </div>
     </section>
 {% endblock %}
