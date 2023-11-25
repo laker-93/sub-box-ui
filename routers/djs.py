@@ -76,11 +76,11 @@ async def export_rekordbox(
                     response_json = await response.json()
                     print(response_json)
                     success = True
-                    total_n_exported_tracks = response_json['exported_tracks']
-                    context['total_n_exported_tracks'] = total_n_exported_tracks
+                    n_beets_tracks = response_json['n_beets_tracks']
+                    context['n_beets_tracks'] = n_beets_tracks
 
     if success:
-        template = templates.TemplateResponse("partials/job_results.html", context)
+        template = templates.TemplateResponse("partials/rx_export_results.html", context)
     else:
         context["error"] = {
             'status_code': status_code,

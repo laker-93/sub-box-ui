@@ -45,10 +45,10 @@
             <form id="exportform">
                 <div>
                     <label>local_root</label>
-                    <input type="text" name="local root" value="<enter-here>">
+                    <input type="text" name="local_root" value="<enter-here>">
                 </div>
                 <!-- todo do some validation here and only show the progress button iff there are uploaded tracks-->
-                <button class="button is-primary" hx-post="/djs/export/rekordbox" hx-target="#foo" hx-swap="innerHTML" hx-indicator="#exportspinner">
+                <button class="button is-primary" hx-post="/djs/export/rekordbox" hx-indicator="#exportspinner" hx-swap="innerHTML">
                     Export
                     <img id="exportspinner" class="htmx-indicator loader" src="/imgs/spin">
                 </button>
