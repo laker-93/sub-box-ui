@@ -1,8 +1,11 @@
 <div id="results-section">
+    <h1 class="subtitle is-3">Progress</h1>
     <section class="section">
         <div class="container" hx-get="/job/progress" hx-target="#results-section" hx-swap="outerHTML" hx-trigger="load delay:1s">
-            <progress class="progress is-success" value="{{ percentage_complete }}" max="1">{{ percentage_complete }}%</progress>
+            <progress class="progress is-success" value="{{ percentage_complete }}" max="100">{{ percentage_complete }}%</progress>
+            <img id="spinner" class="htmx-indicator loader" src="/imgs/spin">
         </div>
+        <p>Imported {{ percentage_complete }} % so far...</p>
     </section>
 </div>
 

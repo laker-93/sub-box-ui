@@ -13,7 +13,8 @@
     <div class="container">
 
         <div id="job-result" hx-target="this" hx-swap="outerHTML">
-            <div hx-post="/process/beets" hx-trigger="start-track-import from:body">
+            <div hx-post="/process/beets" hx-trigger="start-track-import from:body" hx-indicator="#spinner">
+                <img id="spinner" class="htmx-indicator loader" src="/imgs/spin">
             </div>
         </div>
         <div id="job-progress" hx-target="this" hx-swap="outerHTML">
@@ -26,11 +27,10 @@
                 once you have uploaded files, click the process music button. This will sort your music, fetch album art etc.
             </p>
             <!-- todo do some validation here and only show the progress button iff there are uploaded tracks-->
-            <button id="start-upload" hx-get="/job/progress" class="button is-primary" hx-indicator="#spinner" hx-vals='{"type": "start-track-import"}'>
+            <button id="start-upload" hx-get="/job/progress" class="button is-primary" hx-vals='{"type": "start-track-import"}'>
                 process
             </button>
         </div>
-        <img id="spinner" class="htmx-indicator loader" src="/imgs/spin">
 
     </div>
 </section>

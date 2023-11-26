@@ -10,7 +10,7 @@ router = APIRouter()
 @router.get("/job/progress", response_class=HTMLResponse)
 async def job_progress(
         request: Request,
-        type: str,
+        type: str | None = None,
         session_id: str | None = Cookie(None),
 ):
     print(type)
@@ -27,11 +27,12 @@ async def job_progress(
                 response_json = await response.json()
                 print(response_json)
                 i = response_json['percentage_complete']
+                n_tracks_to_import = response_json['n_tracks_to_import']
                 context = {"request": request, 'percentage_complete': i}
-                if i == 0:
+                if i == 0 and type:
                     resp = templates.TemplateResponse("partials/job_progress.html", context)
                     resp.headers['HX-Trigger'] = type
-                elif 0 < i < 1:
+                elif n_tracks_to_import > 0 or 0 < i < 1:
                     resp = templates.TemplateResponse("partials/job_progress.html", context)
                 else:
                     resp = None

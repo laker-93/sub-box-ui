@@ -80,7 +80,7 @@ async def export_rekordbox(
                     context['n_beets_tracks'] = n_beets_tracks
 
     if success:
-        template = templates.TemplateResponse("partials/rx_export_results.html", context)
+        template = templates.TemplateResponse("partials/rb_export_results.html", context)
     else:
         context["error"] = {
             'status_code': status_code,
