@@ -14,7 +14,7 @@ async def job_progress(
         session_id: str | None = Cookie(None),
 ):
     print(type)
-    templates = Jinja2Templates(directory="ui/templates")
+    templates = Jinja2Templates(directory="subbox_landing/ui/templates")
     print('progress')
 
     data = {
@@ -22,7 +22,7 @@ async def job_progress(
     }
 
     async with aiohttp.ClientSession() as session:
-        async with session.get('http://0.0.0.0:8002/beets/import/progress', params=data) as response:
+        async with session.get('http://pymix:8002/beets/import/progress', params=data) as response:
             if response.status == HTTPStatus.OK:
                 response_json = await response.json()
                 print(response_json)

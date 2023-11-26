@@ -5,8 +5,8 @@ from typing import Dict
 from dependency_injector.wiring import Provide
 from uvicorn import Config, Server
 
-from containers import Container
-from registration import create_app, create_container
+from subbox_landing.containers import Container
+from subbox_landing.registration import create_app, create_container
 
 logger = logging.getLogger(__name__)
 

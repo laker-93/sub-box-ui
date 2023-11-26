@@ -8,7 +8,7 @@ from fastapi.templating import Jinja2Templates
 router = APIRouter()
 @router.get("/djs", response_class=HTMLResponse)
 async def djs(request: Request, hx_request: Optional[str] = Header(None)):
-    templates = Jinja2Templates(directory="ui/templates")
+    templates = Jinja2Templates(directory="subbox_landing/ui/templates")
     context = {"request": request}
     return templates.TemplateResponse("djs.html", context)
 
@@ -18,7 +18,7 @@ async def upload_rekordbox(
         session_id: str | None = Cookie(None),
         hx_request: Optional[str] = Header(None)
 ):
-    templates = Jinja2Templates(directory="ui/templates")
+    templates = Jinja2Templates(directory="subbox_landing/ui/templates")
 
     success = False
     context = {"request": request}
@@ -29,7 +29,7 @@ async def upload_rekordbox(
             'session_id': session_id
         }
         async with aiohttp.ClientSession() as session:
-            async with session.post('http://0.0.0.0:8002/rekordbox/import', params=data) as response:
+            async with session.post('http://pymix:8002/rekordbox/import', params=data) as response:
                 status_code = response.status
                 if response.status == HTTPStatus.OK:
                     response_json = await response.json()
@@ -58,7 +58,7 @@ async def export_rekordbox(
         local_root: str = Form(...),
 ):
     print(local_root)
-    templates = Jinja2Templates(directory="ui/templates")
+    templates = Jinja2Templates(directory="subbox_landing/ui/templates")
 
     success = False
     context = {"request": request}
@@ -70,7 +70,7 @@ async def export_rekordbox(
             'user_root': local_root
         }
         async with aiohttp.ClientSession() as session:
-            async with session.post('http://0.0.0.0:8002/rekordbox/export', params=data) as response:
+            async with session.post('http://pymix:8002/rekordbox/export', params=data) as response:
                 status_code = response.status
                 if response.status == HTTPStatus.OK:
                     response_json = await response.json()
