@@ -35,14 +35,21 @@ async def job_progress(
                 elif n_tracks_to_import > 0 or 0 < i < 1:
                     resp = templates.TemplateResponse("partials/job_progress.html", context)
                 else:
-                    resp = None
+                    # todo need to handle the case of distinguishing between an import about to start (and hence n_tracks_to_import still coming back 0)
+                    # todo and the user clicking the process button without any import jobs
+                    resp = templates.TemplateResponse("partials/job_progress.html", context)
                 return resp
                 #else:
                 #    context['reason'] = response_json.get('reason', '')
                 #    resp = templates.TemplateResponse("partials/no_uploaded_tracks.html", context)
                 #    return resp
             else:
-                context = {"request": request}
+                context = {"request": request,
+                           "error": {
+                               'status_code': response.status,
+                               'response': '/beets/import/progress failed'
+                           }
+                           }
                 print(f'error {response.status} {HTTPStatus.OK}')
                 resp = templates.TemplateResponse("partials/failure.html", context)
                 return resp
