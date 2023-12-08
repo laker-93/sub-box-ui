@@ -11,11 +11,8 @@
 </header>
 <section class="section">
     <div class="container">
-
-        <div id="job-result" hx-target="this" hx-swap="outerHTML">
-            <div hx-post="/process/beets" hx-trigger="start-track-import from:body" hx-indicator="#spinner">
-                <img id="spinner" class="htmx-indicator loader" src="/imgs/spin">
-            </div>
+        <div hx-post="/process/beets" hx-swap="outerHTML" hx-trigger="start-track-import from:body" hx-indicator="#spinner">
+            <img id="spinner" class="htmx-indicator loader" src="/imgs/spin">
         </div>
         <div id="job-progress" hx-target="this" hx-swap="outerHTML">
             <div id="content">

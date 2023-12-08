@@ -1,9 +1,14 @@
 from typing import Optional
 import aiohttp
 from http import HTTPStatus
-from fastapi import Request, Header, APIRouter, Cookie, Form
+
+from aiohttp import ClientSession
+from dependency_injector.wiring import Provide
+from fastapi import Request, Header, APIRouter, Cookie, Form, Depends
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
+
+from containers import Container
 
 router = APIRouter()
 @router.get("/djs", response_class=HTMLResponse)
@@ -16,7 +21,8 @@ async def djs(request: Request, hx_request: Optional[str] = Header(None)):
 async def upload_rekordbox(
         request: Request,
         session_id: str | None = Cookie(None),
-        hx_request: Optional[str] = Header(None)
+        hx_request: Optional[str] = Header(None),
+        session: ClientSession = Depends(Provide[Container.aiohttp_session])
 ):
     templates = Jinja2Templates(directory="subbox_landing/ui/templates")
 
@@ -28,7 +34,7 @@ async def upload_rekordbox(
         data = {
             'session_id': session_id
         }
-        async with aiohttp.ClientSession() as session:
+        async with session as session:
             async with session.post('http://pymix:8002/rekordbox/import', params=data) as response:
                 status_code = response.status
                 if response.status == HTTPStatus.OK:
@@ -56,6 +62,7 @@ async def export_rekordbox(
         request: Request,
         session_id: str | None = Cookie(None),
         local_root: str = Form(...),
+        session: ClientSession = Depends(Provide[Container.aiohttp_session])
 ):
     print(local_root)
     templates = Jinja2Templates(directory="subbox_landing/ui/templates")
@@ -69,7 +76,7 @@ async def export_rekordbox(
             'session_id': session_id,
             'user_root': local_root
         }
-        async with aiohttp.ClientSession() as session:
+        async with session as session:
             async with session.post('http://pymix:8002/rekordbox/export', params=data) as response:
                 status_code = response.status
                 if response.status == HTTPStatus.OK:

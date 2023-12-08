@@ -2,6 +2,7 @@ import aiohttp
 import logging
 from http import HTTPStatus
 
+from aiohttp import ClientSession
 from starlette.responses import JSONResponse
 
 from typing import Optional
@@ -21,7 +22,8 @@ logger = logging.getLogger(__name__)
 async def signup_form(
         request: Request,
         session_id: str | None = Cookie(None),
-        hx_request: Optional[str] = Header(None)
+        hx_request: Optional[str] = Header(None),
+        session: ClientSession = Depends(Provide[Container.aiohttp_session])
 ):
     templates = Jinja2Templates(directory="subbox_landing/ui/templates")
 
@@ -30,7 +32,7 @@ async def signup_form(
 
     if session_id:
         try:
-            username = await _get_username_by_session_id(session_id)
+            username = await _get_username_by_session_id(session_id, session)
         except Exception:
             logger.error('error getting user by session id', exc_info=True)
         else:
@@ -49,30 +51,41 @@ async def signup_form(
     return template
 
 
-async def _get_username_by_session_id(session_id):
+async def _get_username_by_session_id(session_id: str, session: ClientSession) -> str:
     data = {
         'session_id': session_id
     }
-    async with aiohttp.ClientSession() as session:
+    async with session as session:
         async with session.get('http://pymix:8002/user/get_by_session_id', params=data) as response:
             if response.status == HTTPStatus.OK:
                 response_json = await response.json()
-                user = response_json['user']
-                username = user['username']
+                try:
+                    user = response_json['user']
+                except KeyError:
+                    logger.error(f'error extracting user from {response_json}', exc_info=True)
+                    raise
+                else:
+                    try:
+                        username = user['username']
+                    except KeyError:
+                        logger.error(f'error extracting username from {user}', exc_info=True)
+                        raise
     return username
 
 
 @router.get("/user/loginform", response_class=HTMLResponse)
 async def login_form(request: Request,
                      session_id: str | None = Cookie(None),
-                     hx_request: Optional[str] = Header(None)):
+                     hx_request: Optional[str] = Header(None),
+                     session: ClientSession = Depends(Provide[Container.aiohttp_session])
+                     ):
     templates = Jinja2Templates(directory="subbox_landing/ui/templates")
 
     context = {"request": request}
     success = False
     if session_id:
         try:
-            username = await _get_username_by_session_id(session_id)
+            username = await _get_username_by_session_id(session_id, session)
         except Exception:
             logger.error('error getting user by session id', exc_info=True)
         else:
@@ -96,10 +109,11 @@ async def login_form(request: Request,
 async def login(
         request: Request,
         session_id: str | None = Cookie(None),
-        config: dict = Depends(Provide[Container.config]),
         username: str = Form(...),
         password: str = Form(...),
-        hx_request: Optional[str] = Header(None)
+        hx_request: Optional[str] = Header(None),
+        config: dict = Depends(Provide[Container.config]),
+        session: ClientSession = Depends(Provide[Container.aiohttp_session]),
 ):
     host = config['py_mix']['host']
     port = config['py_mix']['port']
@@ -113,7 +127,7 @@ async def login(
     }
     error = {}
     success = False
-    async with aiohttp.ClientSession() as session:
+    async with session as session:
         async with session.post('http://pymix:8002/user/login', params=data) as response:
             error['status_code'] = response.status
             if response.status == HTTPStatus.OK:
@@ -149,12 +163,13 @@ async def login(
 @inject
 async def create(
         request: Request,
-        config: dict = Depends(Provide[Container.config]),
         session_id: str | None = Cookie(None),
         username: str = Form(...),
         password: str = Form(...),
         email: str = Form(...),
-        hx_request: Optional[str] = Header(None)
+        hx_request: Optional[str] = Header(None),
+        config: dict = Depends(Provide[Container.config]),
+        session: ClientSession = Depends(Provide[Container.aiohttp_session]),
 ):
     host = config['py_mix']['host']
     port = config['py_mix']['port']
@@ -166,7 +181,7 @@ async def create(
     }
     error = {}
     success = False
-    async with aiohttp.ClientSession() as session:
+    async with session as session:
         async with session.post('http://pymix:8002/user/create', params=data) as response:
             error['status_code'] = response.status
             if response.status == HTTPStatus.OK:

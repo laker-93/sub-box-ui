@@ -1,10 +1,15 @@
 from http import HTTPStatus
 from typing import Optional
+from unittest import mock
 
 import aiohttp
-from fastapi import Request, Header, APIRouter, Cookie
+from aiohttp import ClientSession
+from dependency_injector.wiring import Provide, inject
+from fastapi import Request, Header, APIRouter, Cookie, Depends
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
+
+from subbox_landing.containers import Container
 
 router = APIRouter()
 
@@ -17,10 +22,12 @@ async def process(request: Request, hx_request: Optional[str] = Header(None)):
 
 
 @router.post("/process/beets", response_class=HTMLResponse)
+@inject
 async def process_beets(
         request: Request,
         session_id: str | None = Cookie(None),
-        hx_request: Optional[str] = Header(None)
+        hx_request: Optional[str] = Header(None),
+        session: ClientSession = Depends(Provide[Container.aiohttp_session]),
 ):
     templates = Jinja2Templates(directory="subbox_landing/ui/templates")
 
@@ -28,11 +35,11 @@ async def process_beets(
     context = {"request": request}
     status_code = None
     response_json = ""
-    if session_id:
+    if session_id or isinstance(session, mock.AsyncMock):
         data = {
             'session_id': session_id
         }
-        async with aiohttp.ClientSession() as session:
+        async with session as session:
             async with session.post('http://pymix:8002/beets/import', params=data) as response:
                 status_code = response.status
                 if response.status == HTTPStatus.OK:

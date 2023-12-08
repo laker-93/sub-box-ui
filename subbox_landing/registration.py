@@ -38,7 +38,7 @@ def create_container(environment="dev"):
     container = Container()
     container.config.from_dict(app_config)
     container.init_resources()
-    container.wire(modules=[user, process, sys.modules[__name__]])
+    container.wire(modules=[user, process, job, sys.modules[__name__]])
     return container
 
 
