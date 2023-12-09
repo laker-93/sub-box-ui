@@ -24,6 +24,124 @@ async def main(loop, app_config: Dict = Provide[Container.config]):
     await asyncio.gather(server_task)
 
 
+def _make_mock_import_responses():
+    mock_import_progress_response = mock.MagicMock()
+    mock_import_progress_response.status = 200
+    mock_import_progress_json_1 = asyncio.Future()
+    mock_import_progress_json_1.set_result(
+        {
+            'percentage_complete': 0,
+            'n_tracks_to_import': 0,
+            'import_in_progress': False,
+        }
+    )
+    mock_import_progress_json_2 = asyncio.Future()
+    mock_import_progress_json_2.set_result(
+        {
+            'percentage_complete': 0,
+            'n_tracks_to_import': 50,
+            'import_in_progress': True,
+        }
+    )
+    mock_import_progress_json_3 = asyncio.Future()
+    mock_import_progress_json_3.set_result(
+        {
+            'percentage_complete': 2,
+            'n_tracks_to_import': 50,
+            'import_in_progress': True,
+        }
+    )
+    mock_import_progress_json_4 = asyncio.Future()
+    mock_import_progress_json_4.set_result(
+        {
+            'percentage_complete': 5,
+            'n_tracks_to_import': 50,
+            'import_in_progress': True,
+        }
+    )
+    mock_import_progress_json_5 = asyncio.Future()
+    mock_import_progress_json_5.set_result(
+        {
+            'percentage_complete': 50,
+            'n_tracks_to_import': 50,
+            'import_in_progress': True,
+        }
+    )
+    mock_import_progress_json_6 = asyncio.Future()
+    mock_import_progress_json_6.set_result(
+        {
+            'percentage_complete': 100,
+            'n_tracks_to_import': 50,
+            'import_in_progress': True,
+        }
+    )
+    mock_import_progress_json_7 = asyncio.Future()
+    mock_import_progress_json_7.set_result(
+        {
+            'percentage_complete': 100,
+            'n_tracks_to_import': 50,
+            'import_in_progress': True,
+        }
+    )
+    mock_import_progress_json_8 = asyncio.Future()
+    mock_import_progress_json_8.set_result(
+        {
+            'percentage_complete': 100,
+            'n_tracks_to_import': 50,
+            'import_in_progress': False,
+        }
+    )
+    mock_import_progress_response.json.side_effect = [
+        mock_import_progress_json_1,
+        mock_import_progress_json_2,
+        mock_import_progress_json_3,
+        mock_import_progress_json_4,
+        mock_import_progress_json_5,
+        mock_import_progress_json_6,
+        mock_import_progress_json_7,
+        mock_import_progress_json_8,
+        mock_import_progress_json_8,
+        mock_import_progress_json_8,
+        mock_import_progress_json_8,
+        mock_import_progress_json_8,
+        mock_import_progress_json_8,
+        mock_import_progress_json_8,
+        mock_import_progress_json_8,
+        mock_import_progress_json_8,
+        mock_import_progress_json_8,
+        mock_import_progress_json_8,
+        mock_import_progress_json_8,
+        mock_import_progress_json_8,
+        mock_import_progress_json_8,
+    ]
+    mock_import_progress_return = mock.AsyncMock()
+    mock_import_progress_return.__aenter__.return_value = mock_import_progress_response
+    mock_import_response = mock.MagicMock()
+    mock_import_response.status = 200
+
+    async def mock_import_json():
+        await asyncio.sleep(5)
+        get_json_complete_f = asyncio.Future()
+        get_json_complete_f.set_result(
+            {
+                'percentage_complete': 100,
+                'n_tracks_to_import': 5,
+                'import_in_progress': True
+            }
+        )
+        mock_import_progress_response.json.return_value = get_json_complete_f
+        await asyncio.sleep(5)
+        return {
+            'imported_tracks': 10,
+            'beets_output': 'success'
+        }
+
+    mock_import_response.json = mock_import_json
+    mock_import_return = mock.MagicMock()
+    mock_import_return.__aenter__.return_value = mock_import_response
+    return mock_import_progress_return, mock_import_return
+
+
 if __name__ == '__main__':
     container = create_container('dev')
     container.wire(modules=[__name__])
@@ -31,43 +149,18 @@ if __name__ == '__main__':
     mock_session_mgr = mock.AsyncMock()
     mock_session = mock.MagicMock()
     mock_session_mgr.__aenter__.return_value = mock_session
-    mock_response = mock.MagicMock()
 
-    mock_response.status = 200
+    mock_import_progress_return, mock_import_return = _make_mock_import_responses()
 
-    get_json_f = asyncio.Future()
-    get_json_f.set_result(
-        {
-            'percentage_complete': 0,
-            'n_tracks_to_import': 5
-        }
-    )
+    def mock_get(url, **kwargs):
+        if url.endswith('beets/import/progress'):
+            return mock_import_progress_return
+    def mock_post(url, **kwargs):
+        if url.endswith('beets/import'):
+            return mock_import_return
 
-
-    mock_response.json.return_value = get_json_f
-    mock_get_return = mock.AsyncMock()
-    mock_get_return.__aenter__.return_value = mock_response
-    mock_post_response = mock.MagicMock()
-    mock_post_response.status = 200
-    async def mock_json_post():
-        await asyncio.sleep(5)
-        get_json_complete_f = asyncio.Future()
-        get_json_complete_f.set_result(
-            {
-                'percentage_complete': 100,
-                'n_tracks_to_import': 5
-            }
-        )
-        mock_response.json.return_value = get_json_complete_f
-        return {
-            'imported_tracks': 10,
-            'beets_output': 'success'
-        }
-    mock_post_response.json = mock_json_post
-    mock_post_return = mock.MagicMock()
-    mock_post_return.__aenter__.return_value = mock_post_response
-    mock_session.get.return_value = mock_get_return
-    mock_session.post.return_value = mock_post_return
+    mock_session.get = mock_get
+    mock_session.post = mock_post
     with container.aiohttp_session.override(
         mock_session_mgr
     ):
