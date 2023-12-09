@@ -1,0 +1,46 @@
+{% extends "/shared/_base.html" %}
+{% block content %}
+    <header>
+        <section class="hero is-primary">
+            <div class="hero-body">
+                <div class="container">
+                    <p>SUBBOX - DJS</p>
+                </div>
+            </div>
+        </section>
+    </header>
+    <section class="section">
+        <div class="container content">
+            <h1 class="title is-1">DJ Import</h1>
+            <p>Import from your DJ software</p>
+            <h1 class="subtitle is-1">Import</h1>
+            <p>Currently only importing from a Rekordbox 5 collection is supported. Tested with Rekordbox 5.8.7.</p>
+            <h1 class="subtitle is-3">Rekordbox 5</h1>
+            <p>To import from RB 5</p>
+            <ol>
+                <li>export your RB collection (File->Library->Backup Library. Make sure you select 'yes' to backing up music files as well. This will create a 'rekordbox_bak' folder with the music files in. It will also create a zip folder but this is not needed.</li>
+                <li>backup your collection as an xml (File -> Export Collection in xml format). This contains all the playlist data neeted to create your playlists in subbox.</li>
+            </ol>
+            <p>Once the above has been compelted in rekordbox, upload the resulting xml and rekordbox_bak directory containing the tracks to subbox <a href="/upload">here</a>. Then click process below.</p>
+            <div id="rb-process-content">
+              <div hx-post="/djs/upload/rekordbox" hx-trigger="start-rekordbox-import from:body" hx-target="#rb-process-content" hx-swap="outerHTML" hx-indicator="#spinner">
+              </div>
+
+              <div id="rb-import">
+                  <div id="process">
+                      <p>
+                          Process uploaded rb collection.
+                      </p>
+                  </div>
+                  <p>
+                      once you have uploaded rb backup and rb xml, click the process music button. This will import your collection.
+                  </p>
+                  <!-- todo do some validation here and only show the progress button iff there are uploaded tracks-->
+                  <button id="start-rb-upload" hx-target="#rb-import" hx-swap="outerHTML" hx-get="/job/progress" class="button is-primary" hx-vals='{"type": "start-rekordbox-import"}'>
+                      process
+                  </button>
+              </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

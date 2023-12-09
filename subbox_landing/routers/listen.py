@@ -19,7 +19,7 @@ async def filebrowser(request: Request, hx_request: Optional[str] = Header(None)
     templates = Jinja2Templates(directory="subbox_landing/ui/templates")
     data = {'msg': 'Logged in successfully'}
     response = templates.TemplateResponse('home.html', {'request': request, 'data': data})
-    response.headers['HX-Redirect'] = 'http://127.0.0.1:9180/'
+    response.headers['HX-Redirect'] = 'https://player.sub-box.net/player/#'
     return response
 
 

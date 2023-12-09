@@ -15,10 +15,13 @@
             Upload your audio files to subbox.
         </p>
         <p>
-            Note that clicking this button will redirect you to <a href="https://filebrowser.sub-box.net">https://filebrowser.sub-box.net</a>, a separate service made for uploading and downloading files from subbox servers.
+            Note that clicking this button will redirect you to a subsite of subbox. Log in with your subbox credentials and then upload your desired audio tracks.
+        </p>
+        <p>
+            If you do not yet have an account with subbox, create one with the sign up button in the top right of this page.
         </p>
         <div id="content" hx-target="this" hx-swap="outerHTML">
-            <button hx-get="/upload/filebrowser" class="btn btn-primary">
+            <button hx-get="/upload/filebrowser" class="button is-primary">
                 upload
             </button>
         </div>

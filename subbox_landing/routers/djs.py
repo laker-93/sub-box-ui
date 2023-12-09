@@ -1,14 +1,14 @@
 from typing import Optional
-import aiohttp
+from unittest import mock
 from http import HTTPStatus
 
 from aiohttp import ClientSession
-from dependency_injector.wiring import Provide
+from dependency_injector.wiring import Provide, inject
 from fastapi import Request, Header, APIRouter, Cookie, Form, Depends
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
-from containers import Container
+from subbox_landing.containers import Container
 
 router = APIRouter()
 @router.get("/djs", response_class=HTMLResponse)
@@ -17,7 +17,20 @@ async def djs(request: Request, hx_request: Optional[str] = Header(None)):
     context = {"request": request}
     return templates.TemplateResponse("djs.html", context)
 
+@router.get("/djs-import", response_class=HTMLResponse)
+async def djs(request: Request, hx_request: Optional[str] = Header(None)):
+    templates = Jinja2Templates(directory="subbox_landing/ui/templates")
+    context = {"request": request}
+    return templates.TemplateResponse("djs_import.html", context)
+
+@router.get("/djs-export", response_class=HTMLResponse)
+async def djs(request: Request, hx_request: Optional[str] = Header(None)):
+    templates = Jinja2Templates(directory="subbox_landing/ui/templates")
+    context = {"request": request}
+    return templates.TemplateResponse("djs_export.html", context)
+
 @router.post("/djs/upload/rekordbox", response_class=HTMLResponse)
+@inject
 async def upload_rekordbox(
         request: Request,
         session_id: str | None = Cookie(None),
@@ -30,7 +43,7 @@ async def upload_rekordbox(
     context = {"request": request}
     status_code = None
     response_json = ""
-    if session_id:
+    if session_id or isinstance(session, mock.AsyncMock):
         data = {
             'session_id': session_id
         }
@@ -57,6 +70,7 @@ async def upload_rekordbox(
     return template
 
 @router.post("/djs/export/rekordbox", response_class=HTMLResponse)
+@inject
 async def export_rekordbox(
         request: Request,
         session_id: str | None = Cookie(None),
@@ -70,7 +84,7 @@ async def export_rekordbox(
     context = {"request": request}
     status_code = None
     response_json = ""
-    if session_id:
+    if session_id or isinstance(session, mock.AsyncMock):
         data = {
             'session_id': session_id,
             'user_root': local_root

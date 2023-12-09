@@ -23,6 +23,20 @@ async def main(loop, app_config: Dict = Provide[Container.config]):
     server_task = loop.create_task(server.serve())
     await asyncio.gather(server_task)
 
+def _make_mock_export_responses():
+    mock_rb_export_response = mock.MagicMock()
+    mock_rb_export_response.status = 200
+    async def mock_rb_export_json():
+        await asyncio.sleep(10)
+        return {
+            'n_beets_tracks': 10
+        }
+
+    mock_rb_export_response.json = mock_rb_export_json
+    mock_rb_export_return = mock.AsyncMock()
+    mock_rb_export_return.__aenter__.return_value = mock_rb_export_response
+    return mock_rb_export_return
+
 
 def _make_mock_import_responses():
     mock_import_progress_response = mock.MagicMock()
@@ -151,6 +165,7 @@ if __name__ == '__main__':
     mock_session_mgr.__aenter__.return_value = mock_session
 
     mock_import_progress_return, mock_import_return = _make_mock_import_responses()
+    mock_rb_export_return = _make_mock_export_responses()
 
     def mock_get(url, **kwargs):
         if url.endswith('beets/import/progress'):
@@ -158,6 +173,10 @@ if __name__ == '__main__':
     def mock_post(url, **kwargs):
         if url.endswith('beets/import'):
             return mock_import_return
+        if url.endswith('rekordbox/import'):
+            return mock_import_return
+        if url.endswith('rekordbox/export'):
+            return mock_rb_export_return
 
     mock_session.get = mock_get
     mock_session.post = mock_post

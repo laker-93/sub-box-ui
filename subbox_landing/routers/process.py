@@ -2,7 +2,6 @@ from http import HTTPStatus
 from typing import Optional
 from unittest import mock
 
-import aiohttp
 from aiohttp import ClientSession
 from dependency_injector.wiring import Provide, inject
 from fastapi import Request, Header, APIRouter, Cookie, Depends
