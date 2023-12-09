@@ -166,7 +166,6 @@ async def create(
         session_id: str | None = Cookie(None),
         username: str = Form(...),
         password: str = Form(...),
-        email: str = Form(...),
         hx_request: Optional[str] = Header(None),
         config: dict = Depends(Provide[Container.config]),
         session: ClientSession = Depends(Provide[Container.aiohttp_session]),
@@ -174,7 +173,7 @@ async def create(
     host = config['py_mix']['host']
     port = config['py_mix']['port']
     print(f'host {host} port {port}')
-    print(f'username {username} password {password} email {email} session id {session_id}')
+    print(f'username {username} password {password} session id {session_id}')
     data = {
         'username': username,
         'password': password
