@@ -44,7 +44,6 @@ async def process_beets(
                 status_code = response.status
                 if response.status == HTTPStatus.OK:
                     response_json = await response.json()
-                    print(response_json)
                     success = True
                     total_n_imported_tracks = response_json['imported_tracks']
                     beets_output = response_json['beets_output']

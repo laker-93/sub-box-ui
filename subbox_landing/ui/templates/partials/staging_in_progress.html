@@ -1,0 +1,20 @@
+<div id="results-section">
+    <h1 class="subtitle is-3">In Progress</h1>
+    <section class="section">
+        <div class="container" hx-get="/job/progress" hx-target="#results-section" hx-swap="outerHTML" hx-trigger="load delay:1s">
+        </div>
+        <p>Staging {{ n_tracks_to_import }} tracks for import...</p>
+        {% if n_tracks_to_import < 50 %}
+        <p>This shouldn't take long. :)</p>
+        {% elif n_tracks_to_import < 100 %}
+        <p>This may take a few minutes. :)</p>
+        {% elif n_tracks_to_import < 500 %}
+        <p>This may take a few minutes... Go make a cup of tea. :)</p>
+        {% elif n_tracks_to_import < 1000 %}
+        <p>This may take an hour or so... Go have a nap. :)</p>
+        {% endif %}
+        <img id="spinner" class="loader" src="/imgs/spin">
+    </section>
+</div>
+
+

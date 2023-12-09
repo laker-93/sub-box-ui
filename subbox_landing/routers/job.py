@@ -32,16 +32,18 @@ async def job_progress(
             if response.status == HTTPStatus.OK:
                 response_json = await response.json()
                 print(response_json)
-                i = response_json['percentage_complete']
+                percentage_complete = response_json['percentage_complete']
                 n_tracks_to_import = response_json['n_tracks_to_import']
-                context = {"request": request, 'percentage_complete': i}
-                if i == 0 and type:
-                    resp = templates.TemplateResponse("partials/job_progress.html", context)
+                import_in_progress = response_json['import_in_progress']
+                context = {"request": request, 'percentage_complete': percentage_complete, "n_tracks_to_import": n_tracks_to_import}
+                if not import_in_progress and type:
+                    resp = templates.TemplateResponse("partials/staging_in_progress.html", context)
+                    # this will kick off the import job
                     resp.headers['HX-Trigger'] = type
-                elif n_tracks_to_import > 0 and 0 < i < 100:
+                elif import_in_progress and percentage_complete == 0:
+                    resp = templates.TemplateResponse("partials/staging_in_progress.html", context)
+                elif n_tracks_to_import > 0 and 0 < percentage_complete <= 100:
                     resp = templates.TemplateResponse("partials/job_progress.html", context)
-                elif i >= 100:
-                    resp = None
                 else:
                     # todo need to handle the case of distinguishing between an import about to start (and hence n_tracks_to_import still coming back 0)
                     # todo and the user clicking the process button without any import jobs
