@@ -124,7 +124,8 @@ async def login(
     data = {
         'username': username,
         'password': password,
-        'session_id': session_id
+        # aiohttp does not support sending a None param
+        'session_id': 'none' if not session_id else session_id
     }
     error = {}
     success = False
