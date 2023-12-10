@@ -19,6 +19,7 @@ logger = logging.getLogger(__name__)
 
 
 @router.get("/user/signupform", response_class=HTMLResponse)
+@inject
 async def signup_form(
         request: Request,
         session_id: str | None = Cookie(None),
@@ -55,25 +56,25 @@ async def _get_username_by_session_id(session_id: str, session: ClientSession) -
     data = {
         'session_id': session_id
     }
-    async with session as session:
-        async with session.get('http://pymix:8002/user/get_by_session_id', params=data) as response:
-            if response.status == HTTPStatus.OK:
-                response_json = await response.json()
+    async with session.get('http://pymix:8002/user/get_by_session_id', params=data) as response:
+        if response.status == HTTPStatus.OK:
+            response_json = await response.json()
+            try:
+                user = response_json['user']
+            except KeyError:
+                logger.error(f'error extracting user from {response_json}', exc_info=True)
+                raise
+            else:
                 try:
-                    user = response_json['user']
+                    username = user['username']
                 except KeyError:
-                    logger.error(f'error extracting user from {response_json}', exc_info=True)
+                    logger.error(f'error extracting username from {user}', exc_info=True)
                     raise
-                else:
-                    try:
-                        username = user['username']
-                    except KeyError:
-                        logger.error(f'error extracting username from {user}', exc_info=True)
-                        raise
     return username
 
 
 @router.get("/user/loginform", response_class=HTMLResponse)
+@inject
 async def login_form(request: Request,
                      session_id: str | None = Cookie(None),
                      hx_request: Optional[str] = Header(None),
@@ -127,24 +128,23 @@ async def login(
     }
     error = {}
     success = False
-    async with session as session:
-        async with session.post('http://pymix:8002/user/login', params=data) as response:
-            error['status_code'] = response.status
-            if response.status == HTTPStatus.OK:
+    async with session.post('http://pymix:8002/user/login', params=data) as response:
+        error['status_code'] = response.status
+        if response.status == HTTPStatus.OK:
+            response_json = await response.json()
+            session_id = response.cookies.get('session_id').value
+            print(response_json)
+            template = 'partials/success.html'
+            success = True
+        else:
+            print(f'error {response.status} {HTTPStatus.OK}')
+            try:
                 response_json = await response.json()
-                session_id = response.cookies.get('session_id').value
-                print(response_json)
-                template = 'partials/success.html'
-                success = True
-            else:
-                print(f'error {response.status} {HTTPStatus.OK}')
-                try:
-                    response_json = await response.json()
-                except Exception:
-                    logger.error(f'failed to decode response {response}', exc_info=True)
-                    response_json = ""
-                template = 'partials/failure.html'
-                error['response'] = response_json
+            except Exception:
+                logger.error(f'failed to decode response {response}', exc_info=True)
+                response_json = ""
+            template = 'partials/failure.html'
+            error['response'] = response_json
 
     templates = Jinja2Templates(directory="subbox_landing/ui/templates")
 
@@ -180,24 +180,23 @@ async def create(
     }
     error = {}
     success = False
-    async with session as session:
-        async with session.post('http://pymix:8002/user/create', params=data) as response:
-            error['status_code'] = response.status
-            if response.status == HTTPStatus.OK:
+    async with session.post('http://pymix:8002/user/create', params=data) as response:
+        error['status_code'] = response.status
+        if response.status == HTTPStatus.OK:
+            response_json = await response.json()
+            session_id = response.cookies.get('session_id').value
+            print(response_json)
+            template = 'partials/success.html'
+            success = True
+        else:
+            print(f'error {response.status} {HTTPStatus.OK}')
+            try:
                 response_json = await response.json()
-                session_id = response.cookies.get('session_id').value
-                print(response_json)
-                template = 'partials/success.html'
-                success = True
-            else:
-                print(f'error {response.status} {HTTPStatus.OK}')
-                try:
-                    response_json = await response.json()
-                except Exception:
-                    logger.error(f'failed to decode response {response}', exc_info=True)
-                    response_json = ""
-                template = 'partials/failure.html'
-                error['response'] = response_json
+            except Exception:
+                logger.error(f'failed to decode response {response}', exc_info=True)
+                response_json = ""
+            template = 'partials/failure.html'
+            error['response'] = response_json
 
     templates = Jinja2Templates(directory="subbox_landing/ui/templates")
     if success:

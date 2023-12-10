@@ -38,16 +38,15 @@ async def process_beets(
         data = {
             'session_id': session_id
         }
-        async with session as session:
-            async with session.post('http://pymix:8002/beets/import', params=data) as response:
-                status_code = response.status
-                if response.status == HTTPStatus.OK:
-                    response_json = await response.json()
-                    success = True
-                    total_n_imported_tracks = response_json['imported_tracks']
-                    beets_output = response_json['beets_output']
-                    context['total_n_imported_tracks'] = total_n_imported_tracks
-                    context['beets_output'] = beets_output
+        async with session.post('http://pymix:8002/beets/import', params=data) as response:
+            status_code = response.status
+            if response.status == HTTPStatus.OK:
+                response_json = await response.json()
+                success = True
+                total_n_imported_tracks = response_json['imported_tracks']
+                beets_output = response_json['beets_output']
+                context['total_n_imported_tracks'] = total_n_imported_tracks
+                context['beets_output'] = beets_output
 
     if success:
         template = templates.TemplateResponse("partials/job_results.html", context)

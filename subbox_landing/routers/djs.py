@@ -47,16 +47,15 @@ async def upload_rekordbox(
         data = {
             'session_id': session_id
         }
-        async with session as session:
-            async with session.post('http://pymix:8002/rekordbox/import', params=data) as response:
-                status_code = response.status
-                if response.status == HTTPStatus.OK:
-                    response_json = await response.json()
-                    success = True
-                    total_n_imported_tracks = response_json['imported_tracks']
-                    beets_output = response_json['beets_output']
-                    context['total_n_imported_tracks'] = total_n_imported_tracks
-                    context['beets_output'] = beets_output
+        async with session.post('http://pymix:8002/rekordbox/import', params=data) as response:
+            status_code = response.status
+            if response.status == HTTPStatus.OK:
+                response_json = await response.json()
+                success = True
+                total_n_imported_tracks = response_json['imported_tracks']
+                beets_output = response_json['beets_output']
+                context['total_n_imported_tracks'] = total_n_imported_tracks
+                context['beets_output'] = beets_output
 
     if success:
         template = templates.TemplateResponse("partials/job_results.html", context)
@@ -89,15 +88,14 @@ async def export_rekordbox(
             'session_id': session_id,
             'user_root': local_root
         }
-        async with session as session:
-            async with session.post('http://pymix:8002/rekordbox/export', params=data) as response:
-                status_code = response.status
-                if response.status == HTTPStatus.OK:
-                    response_json = await response.json()
-                    print(response_json)
-                    success = True
-                    n_beets_tracks = response_json['n_beets_tracks']
-                    context['n_beets_tracks'] = n_beets_tracks
+        async with session.post('http://pymix:8002/rekordbox/export', params=data) as response:
+            status_code = response.status
+            if response.status == HTTPStatus.OK:
+                response_json = await response.json()
+                print(response_json)
+                success = True
+                n_beets_tracks = response_json['n_beets_tracks']
+                context['n_beets_tracks'] = n_beets_tracks
 
     if success:
         template = templates.TemplateResponse("partials/rb_export_results.html", context)
