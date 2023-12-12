@@ -18,10 +18,10 @@
             <h1 class="subtitle is-3">Rekordbox 5</h1>
             <p>To import from RB 5</p>
             <ol>
-                <li>export your RB collection (File->Library->Backup Library. Make sure you select 'yes' to backing up music files as well. This will create a 'rekordbox_bak' folder with the music files in. It will also create a zip folder but this is not needed.</li>
+                <li>export your RB collection (From rekordbox 5 desktop app: File->Library->Backup Library). Make sure you select 'yes' to backing up music files as well. This will create a 'rekordbox_bak' folder with the music files in. It will also create a zip folder but this is not needed.</li>
                 <li>backup your collection as an xml (File -> Export Collection in xml format). This contains all the playlist data neeted to create your playlists in subbox.</li>
             </ol>
-            <p>Once the above has been compelted in rekordbox, upload the resulting xml and rekordbox_bak directory containing the tracks to subbox <a href="/upload">here</a>. Then click process below.</p>
+            <p>Once the above has been completed in rekordbox, upload the resulting xml and rekordbox_bak directory containing the tracks to subbox <a href="/upload">here</a>. Then click process below.</p>
             <div id="rb-process-content">
               <div hx-post="/djs/upload/rekordbox" hx-trigger="start-rekordbox-import from:body" hx-target="#rb-process-content" hx-swap="outerHTML" hx-indicator="#spinner">
               </div>
