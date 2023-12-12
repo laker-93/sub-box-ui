@@ -17,20 +17,24 @@
                 <h1 class="subtitle is-1">Export</h1>
 
                 <h1 class="subtitle is-3">RekordBox 5</h1>
-                <p>Currently only importing from a Rekordbox 5 collection is supported. Tested with Rekordbox 5.8.7.</p>
+                <p>Currently only exporting to the Rekordbox 5 desktop app is supported. Tested with Rekordbox 5.8.7.</p>
                 <div id="export">
                     <p>
                         export subbox collection to rb.
                     </p>
                 </div>
                 <p>
-                    once you have made changes in sub box (adding more tracks or creating/modifying playlists) export to rekordbox. This will create a zip of your collection in subbox that can be downloaded <a href="upload">here</a>. It also creates an xml of the collection that can be imported in to rekordbox.
+                    once you have made changes in sub box (e.g. adding more tracks, rating tracks or creating/modifying playlists) export to rekordbox. This will create a zip of the audio files of your collection in subbox that can be downloaded <a href="upload">here</a>.
+                    It also creates an xml of your collection, containing the playlist information and other meta information for rekordbox.
+                    Once you have downloaded the zip and xml from subbox to your computer you will need to unzip the audio files in the path you set in the 'local root' box below.
+                    Finally, you will need to specify the path of the xml in rekordbox.
+                    To do this go to Prefernces -> View -> check 'rekordbox xml' in Layout then set the path of the xml in Preferences->Advanced->Database tab -> Imported Library.
                 </p>
                 <form id="exportform">
                     <div>
                         <label>local root</label>
                         <input type="text" name="local_root" value="<enter-here>">
-                        <p>set the local root for where you will extract the zip and xml exported from subbox to on your local machine. For example: `/Users/my_username/music/subbox`</p>
+                        <p>set the local root for where you will extract the zip on your system. For example: `/Users/my_username/music/subbox`</p>
                     </div>
                     <!-- todo do some validation here and only show the progress button iff there are uploaded tracks-->
                     <button class="button is-primary" hx-post="/djs/export/rekordbox" hx-target="#rb-export" hx-indicator="#spinner" hx-swap="outerHTML">
