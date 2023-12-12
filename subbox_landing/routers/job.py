@@ -19,9 +19,7 @@ async def job_progress(
         session_id: str | None = Cookie(None),
         session: ClientSession = Depends(Provide[Container.aiohttp_session]),
 ):
-    print(type)
     templates = Jinja2Templates(directory="subbox_landing/ui/templates")
-    print('progress')
 
     data = {
         'session_id': session_id
@@ -30,7 +28,6 @@ async def job_progress(
     async with session.get('http://pymix:8002/beets/import/progress', params=data) as response:
         if response.status == HTTPStatus.OK:
             response_json = await response.json()
-            print(response_json)
             percentage_complete = response_json['percentage_complete']
             n_tracks_to_import = response_json['n_tracks_to_import']
             import_in_progress = response_json['import_in_progress']
@@ -56,6 +53,5 @@ async def job_progress(
                            'response': '/beets/import/progress failed'
                        }
                        }
-            print(f'error {response.status} {HTTPStatus.OK}')
             resp = templates.TemplateResponse("partials/failure.html", context)
             return resp
