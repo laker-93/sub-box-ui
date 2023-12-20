@@ -21,14 +21,37 @@ async def djs(request: Request, hx_request: Optional[str] = Header(None)):
 async def djs(request: Request, hx_request: Optional[str] = Header(None)):
     templates = Jinja2Templates(directory="subbox_landing/ui/templates")
     context = {"request": request}
-    return templates.TemplateResponse("djs_import.html", context)
+    return templates.TemplateResponse("dj/djs_import.html", context)
 
 @router.get("/djs-export", response_class=HTMLResponse)
 async def djs(request: Request, hx_request: Optional[str] = Header(None)):
     templates = Jinja2Templates(directory="subbox_landing/ui/templates")
     context = {"request": request}
-    return templates.TemplateResponse("djs_export.html", context)
+    return templates.TemplateResponse("dj/djs_export.html", context)
 
+@router.get("/rb-import", response_class=HTMLResponse)
+async def djs(request: Request, hx_request: Optional[str] = Header(None)):
+    templates = Jinja2Templates(directory="subbox_landing/ui/templates")
+    context = {"request": request}
+    return templates.TemplateResponse("dj/rb_import.html", context)
+
+@router.get("/rb-export", response_class=HTMLResponse)
+async def djs(request: Request, hx_request: Optional[str] = Header(None)):
+    templates = Jinja2Templates(directory="subbox_landing/ui/templates")
+    context = {"request": request}
+    return templates.TemplateResponse("dj/rb_export.html", context)
+
+@router.get("/serato-import", response_class=HTMLResponse)
+async def djs(request: Request, hx_request: Optional[str] = Header(None)):
+    templates = Jinja2Templates(directory="subbox_landing/ui/templates")
+    context = {"request": request}
+    return templates.TemplateResponse("dj/serato_import.html", context)
+
+@router.get("/serato-export", response_class=HTMLResponse)
+async def djs(request: Request, hx_request: Optional[str] = Header(None)):
+    templates = Jinja2Templates(directory="subbox_landing/ui/templates")
+    context = {"request": request}
+    return templates.TemplateResponse("dj/serato_export.html", context)
 @router.post("/djs/upload/rekordbox", response_class=HTMLResponse)
 @inject
 async def upload_rekordbox(

@@ -1,0 +1,62 @@
+{% extends "/shared/_base.html" %}
+{% block content %}
+    <header>
+        <section class="hero is-primary">
+            <div class="hero-body">
+                <div class="container">
+                    <p>SUBBOX - DJS</p>
+                </div>
+            </div>
+        </section>
+    </header>
+    <section class="section">
+        <div class="container content">
+            <h1 class="title is-1">SubBox export</h1>
+            <p>Export from sub-box to your DJ software</p>
+            <div id="rb-export">
+                <h1 class="subtitle is-3">RekordBox</h1>
+                <p>Tested with Rekordbox 5.8.7 and Rekordbox 6.8.0. It should also work with other rekordbox versions.</p>
+                <p>
+                    once you have made changes in sub box (e.g. adding more tracks, rating tracks or creating/modifying playlists) then you can export your changes to rekordbox (from rekordbox you can then export to USB for playback on your DJ system).
+                </p>
+                <p>
+                    To get started, fill out the form below and click export.
+                    When this completes, it will prepare a zip file that you can download to your computer.
+                    The zip contains your updated music collection and an xml file, containing the playlist information and other meta information for rekordbox.
+                    Once you have downloaded the zip and xml from subbox to your computer you will need to unzip the audio files in the path you set in the 'local root' box below.
+                    Finally, you will need to enable the xml feature in rekordbox and specify the path of the xml. See further instructions below.
+                </p>
+                <form id="exportform">
+                    <div>
+                        <label>local root</label>
+                        <input type="text" name="local_root" value="<enter-here>">
+                        <p>set the local root for where you will extract the zip on your system. For example: `/Users/bob/subbox`</p>
+                    </div>
+                    <!-- todo do some validation here and only show the progress button iff there are uploaded tracks-->
+                    <button class="button is-primary" hx-post="/djs/export/rekordbox" hx-target="#rb-export" hx-indicator="#spinner" hx-swap="outerHTML">
+                        Export
+                        <img id="spinner" class="htmx-indicator loader" src="/imgs/spin">
+                    </button>
+                </form>
+                <p>
+                    Once this completes successfully, download the zip <a href="/upload/filebrowser">here</a>.
+                </p>
+                <h1 class="subtitle is-4">Importing XML in to RekordBox</h1>
+                <p>
+                To do this go to Prefernces -> View -> check 'rekordbox xml' in Layout.
+                </p>
+                <p>
+                    <img src="/imgs/rb-import-enable-xml" width="604" height="448">
+                </p>
+                <p>
+                    then set the path of the xml in Preferences->Advanced->Database tab -> Imported Library.
+                    This must match the path of the XML you downloaded from subbox on your local system. It should be
+                    places at the location you set in the "local root" form above.
+                </p>
+                <p>
+                <img src="/imgs/rb-import-set-xml-path" width="604" height="448">
+                </p>
+            </div>
+        </div>
+    </section>
+{% endblock %}
