@@ -1,0 +1,27 @@
+{% extends "/shared/_base.html" %}
+{% block content %}
+<header>
+    <section class="hero is-primary">
+        <div class="hero-body">
+            <div class="container">
+                <p>SUBBOX - DOWNLOAD</p>
+            </div>
+        </div>
+    </section>
+</header>
+<section class="section">
+    <div class="container">
+        <p>
+            Download subbux generated files to your computer.
+        </p>
+        <p>
+            Note that clicking this button will redirect you to a subsite of subbox. Log in with your subbox credentials and then download the generated files created from a subbox export.
+        </p>
+        <div id="content" hx-target="this" hx-swap="outerHTML">
+            <button hx-get="/upload/filebrowser" class="button is-primary">
+                download
+            </button>
+        </div>
+    </div>
+</section>
+{% endblock %}

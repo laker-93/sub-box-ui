@@ -12,6 +12,11 @@ async def upload(request: Request, hx_request: Optional[str] = Header(None)):
     response = templates.TemplateResponse('upload.html', {'request': request})
     return response
 
+@router.get("/download", response_class=HTMLResponse)
+async def download(request: Request, hx_request: Optional[str] = Header(None)):
+    templates = Jinja2Templates(directory="subbox_landing/ui/templates")
+    response = templates.TemplateResponse('download.html', {'request': request})
+    return response
 
 @router.get("/upload/filebrowser", response_class=HTMLResponse)
 async def filebrowser(request: Request, hx_request: Optional[str] = Header(None)):

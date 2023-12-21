@@ -46,3 +46,8 @@ async def rb_backup(request: Request, hx_request: Optional[str] = Header(None)):
 async def rb_backup_music_files(request: Request, hx_request: Optional[str] = Header(None)):
     file_location = os.getcwd() + "/subbox_landing/ui/templates/imgs/RB-backup-music-files.png"
     return FileResponse(file_location)
+
+@router.get("/imgs/player-screenshot", response_class=FileResponse)
+async def rb_backup_music_files(request: Request, hx_request: Optional[str] = Header(None)):
+    file_location = os.getcwd() + "/subbox_landing/ui/templates/imgs/player-screenshot.png"
+    return FileResponse(file_location)

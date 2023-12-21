@@ -32,6 +32,7 @@
                         <input type="text" name="local_root" value="<enter-here>">
                         <p>set the local root for where you will extract the zip on your system. For example: `/Users/bob/subbox`</p>
                     </div>
+                    <p>Note that for a large collection, this could take several minutes.</p>
                     <!-- todo do some validation here and only show the progress button iff there are uploaded tracks-->
                     <button class="button is-primary" hx-post="/djs/export/rekordbox" hx-target="#rb-export" hx-indicator="#spinner" hx-swap="outerHTML">
                         Export
@@ -39,7 +40,7 @@
                     </button>
                 </form>
                 <p>
-                    Once this completes successfully, download the zip <a href="/upload/filebrowser">here</a>.
+                    Once this completes successfully, download the zip <a href="/download">here</a>.
                 </p>
                 <h1 class="subtitle is-4">Importing XML in to RekordBox</h1>
                 <p>
