@@ -1,6 +1,6 @@
 from http import HTTPStatus
+from typing import Dict
 
-import aiohttp
 from aiohttp import ClientSession
 from dependency_injector.wiring import Provide, inject
 from fastapi import Request, Header, APIRouter, Cookie, Depends
@@ -18,20 +18,24 @@ async def job_progress(
         type: str | None = None,
         session_id: str | None = Cookie(None),
         session: ClientSession = Depends(Provide[Container.aiohttp_session]),
+        config: Dict = Provide[Container.config]
 ):
-    templates = Jinja2Templates(directory="subbox_landing/ui/templates")
+    templates = Jinja2Templates(directory="ui/templates")
 
     data = {
         'session_id': session_id
     }
 
-    async with session.get('http://pymix:8002/beets/import/progress', params=data) as response:
+    async with session.get(f'http://{config["pymix"]["addr"]}/beets/import/progress', params=data) as response:
         if response.status == HTTPStatus.OK:
             response_json = await response.json()
             percentage_complete = response_json['percentage_complete']
             n_tracks_to_import = response_json['n_tracks_to_import']
+            n_tracks_imported = response_json['n_tracks_imported']
             import_in_progress = response_json['import_in_progress']
-            context = {"request": request, 'percentage_complete': percentage_complete, "n_tracks_to_import": n_tracks_to_import}
+            context = {"request": request, 'percentage_complete': percentage_complete,
+                       "n_tracks_to_import": n_tracks_to_import,
+                       "n_tracks_imported": n_tracks_imported}
             if not import_in_progress and type:
                 resp = templates.TemplateResponse("partials/staging_in_progress.html", context)
                 # this will kick off the import job

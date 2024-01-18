@@ -11,11 +11,33 @@
     </header>
     <section class="section">
         <div class="container content">
-            <h1 class="title is-1">DJ Import</h1>
-            <p>Import from your DJ software</p>
-            <h1 class="subtitle is-1">Import</h1>
+            <h1 class="title is-1">SubBox Import</h1>
+            <p>Import to sub-box from your Serato collection.</p>
             <h1 class="subtitle is-3">Serato DJ Pro</h1>
-            <p>Coming soon!</p>
+            <p>Tested with Serato DJ Pro Version 3.1.1. It should also work for other versions.</p>
+            <p>To import from Serato DJ Pro</p>
+            <ol>
+                <li>Zip up your audio files and call it 'audio_files.zip'</li>
+                <li>Zip up your subcrates folder (located ~/Music/_Serato_/SubCrates). Call it 'SubCrates.zip'.</li>
+            </ol>
+            <p>Once you have completed the above, upload the two zip files to subbox <a href="/upload">here</a>. Then click process below.</p>
+            <div id="serato-process-content">
+                <div hx-post="/djs/upload/serato" hx-trigger="start-serato-import from:body" hx-target="#serato-process-content" hx-swap="outerHTML" hx-indicator="#spinner">
+                </div>
+
+                <div id="serato-import">
+                    <div id="process">
+                        <p>
+                            Process uploaded serato collection.
+                        </p>
+                    </div>
+                    <p>
+                        once you have uploaded the two zip files, click the process music button. This will import your collection.
+                    </p>
+                    <!-- todo do some validation here and only show the progress button iff there are uploaded tracks-->
+                    <button id="start-serato-upload" hx-target="#serato-import" hx-swap="outerHTML" hx-get="/job/progress" class="button is-primary" hx-vals='{"type": "start-serato-import"}'>
+                        process
+                    </button>
         </div>
     </section>
 {% endblock %}
