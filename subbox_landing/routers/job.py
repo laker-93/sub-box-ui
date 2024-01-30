@@ -1,6 +1,6 @@
 from http import HTTPStatus
+from typing import Dict
 
-import aiohttp
 from aiohttp import ClientSession
 from dependency_injector.wiring import Provide, inject
 from fastapi import Request, Header, APIRouter, Cookie, Depends
@@ -18,6 +18,7 @@ async def job_progress(
         type: str | None = None,
         session_id: str | None = Cookie(None),
         session: ClientSession = Depends(Provide[Container.aiohttp_session]),
+        config: Dict = Provide[Container.config]
 ):
     templates = Jinja2Templates(directory="subbox_landing/ui/templates")
 
@@ -25,7 +26,7 @@ async def job_progress(
         'session_id': session_id
     }
 
-    async with session.get('http://pymix:8002/beets/import/progress', params=data) as response:
+    async with session.get(f'http://{config["pymix"]["addr"]}/beets/import/progress', params=data) as response:
         if response.status == HTTPStatus.OK:
             response_json = await response.json()
             percentage_complete = response_json['percentage_complete']

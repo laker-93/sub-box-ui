@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Dict
 from unittest import mock
 from http import HTTPStatus
 
@@ -58,6 +58,7 @@ async def upload_rekordbox(
         request: Request,
         session_id: str | None = Cookie(None),
         hx_request: Optional[str] = Header(None),
+        config: Dict = Provide[Container.config],
         session: ClientSession = Depends(Provide[Container.aiohttp_session])
 ):
     templates = Jinja2Templates(directory="subbox_landing/ui/templates")
@@ -70,7 +71,7 @@ async def upload_rekordbox(
         data = {
             'session_id': session_id
         }
-        async with session.post('http://pymix:8002/rekordbox/import', params=data) as response:
+        async with session.post(f'http://{config["pymix"]["addr"]}/rekordbox/import', params=data) as response:
             status_code = response.status
             if response.status == HTTPStatus.OK:
                 response_json = await response.json()
@@ -97,6 +98,7 @@ async def export_rekordbox(
         request: Request,
         session_id: str | None = Cookie(None),
         local_root: str = Form(...),
+        config: Dict = Provide[Container.config],
         session: ClientSession = Depends(Provide[Container.aiohttp_session])
 ):
     print(local_root)
@@ -111,7 +113,7 @@ async def export_rekordbox(
             'session_id': session_id,
             'user_root': local_root
         }
-        async with session.post('http://pymix:8002/rekordbox/export', params=data) as response:
+        async with session.post(f'http://{config["pymix"]["addr"]}/rekordbox/export', params=data) as response:
             status_code = response.status
             if response.status == HTTPStatus.OK:
                 response_json = await response.json()
@@ -137,6 +139,7 @@ async def export_serato(
         request: Request,
         session_id: str | None = Cookie(None),
         local_root: str = Form(...),
+        config: Dict = Provide[Container.config],
         session: ClientSession = Depends(Provide[Container.aiohttp_session])
 ):
     print(local_root)
@@ -151,7 +154,7 @@ async def export_serato(
             'session_id': session_id,
             'user_root': local_root
         }
-        async with session.post('http://pymix:8002/serato/export', params=data) as response:
+        async with session.post(f'http://{config["pymix"]["addr"]}/serato/export', params=data) as response:
             status_code = response.status
             if response.status == HTTPStatus.OK:
                 response_json = await response.json()
@@ -177,6 +180,7 @@ async def upload_serato(
         request: Request,
         session_id: str | None = Cookie(None),
         hx_request: Optional[str] = Header(None),
+        config: Dict = Provide[Container.config],
         session: ClientSession = Depends(Provide[Container.aiohttp_session])
 ):
     templates = Jinja2Templates(directory="subbox_landing/ui/templates")
@@ -189,7 +193,7 @@ async def upload_serato(
         data = {
             'session_id': session_id
         }
-        async with session.post('http://pymix:8002/serato/import', params=data) as response:
+        async with session.post(f'http://{config["pymix"]["addr"]}/serato/import', params=data) as response:
             status_code = response.status
             if response.status == HTTPStatus.OK:
                 response_json = await response.json()
