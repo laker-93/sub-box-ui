@@ -15,7 +15,7 @@ router = APIRouter()
 
 @router.get("/process", response_class=HTMLResponse)
 async def process(request: Request, hx_request: Optional[str] = Header(None)):
-    templates = Jinja2Templates(directory="subbox_landing/ui/templates")
+    templates = Jinja2Templates(directory="ui/templates")
     response = templates.TemplateResponse('process.html', {'request': request})
     return response
 
@@ -26,9 +26,10 @@ async def process_beets(
         request: Request,
         session_id: str | None = Cookie(None),
         hx_request: Optional[str] = Header(None),
+        config: dict = Provide[Container.config],
         session: ClientSession = Depends(Provide[Container.aiohttp_session]),
 ):
-    templates = Jinja2Templates(directory="subbox_landing/ui/templates")
+    templates = Jinja2Templates(directory="ui/templates")
 
     success = False
     context = {"request": request}
@@ -38,7 +39,7 @@ async def process_beets(
         data = {
             'session_id': session_id
         }
-        async with session.post('http://pymix:8002/beets/import', params=data) as response:
+        async with session.post(f'http://{config["pymix"]["addr"]}/beets/import', params=data) as response:
             status_code = response.status
             if response.status == HTTPStatus.OK:
                 response_json = await response.json()

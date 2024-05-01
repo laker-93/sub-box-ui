@@ -12,13 +12,14 @@
     <section class="section">
         <div class="container content">
             <h1 class="title is-1">SubBox Import</h1>
-            <p>Import to sub-box from your DJ software</p>
+            <p>Import to sub-box from your Rekordbox collection.</p>
             <h1 class="subtitle is-3">Rekordbox</h1>
             <p>Tested with Rekordbox 5.8.7 and Rekordbox 6.8.0. It should also work with other rekordbox versions.</p>
-            <p>To import from RB 5</p>
+            <p>To import from Rekordbox</p>
             <ol>
                 <li>export your RB collection (From rekordbox desktop app: File->Library->Backup Library). Make sure you select 'yes' to backing up music files as well. This will create a 'rekordbox_bak' folder with the music files in. It will also create a zip folder but this is not needed.</li>
-                <li>backup your collection as xml (File -> Export Collection in xml format). This contains all the playlist data neeted to create your playlists in subbox.</li>
+                <li>To decrease the time it takes to import your collection to subbox, create a zip of the 'rekordbox_bak' directory made in the above step. Call it 'rekordbox_bak.zip'.</li>
+                <li>backup your collection as xml (File -> Export Collection in xml format). Save it as 'rekordbox-backup.xml'. This contains all the playlist data needed to create your playlists in subbox.</li>
             </ol>
             <p>Once the above has been completed in rekordbox, upload the resulting xml and rekordbox_bak directory containing the tracks to subbox <a href="/upload">here</a>. Then click process below.</p>
             <div id="rb-process-content">

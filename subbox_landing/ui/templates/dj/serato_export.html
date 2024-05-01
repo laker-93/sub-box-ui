@@ -12,11 +12,41 @@
     <section class="section">
         <div class="container content">
             <h1 class="title is-1">DJ export</h1>
-            <p>Export to your DJ software</p>
+            <p>Export from sub-box to your DJ software</p>
             <div id="rb-export">
                 <h1 class="subtitle is-1">Export</h1>
                 <h1 class="subtitle is-3">Serato DJ Pro</h1>
-                <p>Coming soon!</p>
+                <p>Tested with Serato DJ Pro Version 3.1.1. It should also work for other versions.</p>
+                <p>
+                    export your collection and playlists in sub box to Serato (from Serato you can then play through your hardware DJ system.
+                </p>
+                <p>
+                    To get started, fill out the form below and click export.
+                    When this completes, it will prepare a zip file that you can download to your computer.
+                    The zip contains your updated music collection and a Serato Crates directory, containing the crate information for Serato.
+                    Once you have downloaded the zip from subbox to your computer you will need to unzip the audio files in the path you set in the 'local root' box below.
+                    Finally, you will need to drag and drop the downloaded serato crates directory from subbox in to your local Serato subcrates directory (by default located at ~/Music/_Serato_/Subcrates).
+                </p>
+                <form id="exportform">
+                    <div>
+                        <label>local root</label>
+                        <input type="text" name="local_root" value="<enter-here>">
+                        <p>set the local root for where you will extract the zip of the audio files on your system. For example: `/Users/bob/subbox`</p>
+                    </div>
+                    <p>Note that for a large collection, this could take several minutes.</p>
+                    <!-- todo do some validation here and only show the progress button iff there are uploaded tracks-->
+                    <button class="button is-primary" hx-post="/djs/export/serato" hx-target="#rb-export" hx-indicator="#spinner" hx-swap="outerHTML">
+                        Export
+                        <img id="spinner" class="htmx-indicator loader" src="/imgs/spin">
+                    </button>
+                </form>
+                <p>
+                    Once this completes successfully, download the zip <a href="/download">here</a>.
+                </p>
+                <h1 class="subtitle is-4">Importing crates from subbox in to Serato.</h1>
+                <p>
+                    drag and drop the downloaded Serato crates directory from subbox in to your local Serato subcrates directory (by default located at ~/Music/_Serato_/Subcrates).
+                </p>
             </div>
         </div>
     </section>
