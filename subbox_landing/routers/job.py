@@ -20,6 +20,7 @@ async def job_progress(
         session: ClientSession = Depends(Provide[Container.aiohttp_session]),
         config: Dict = Provide[Container.config]
 ):
+    print(f'type {type}')
     templates = Jinja2Templates(directory="ui/templates")
 
     data = {
@@ -27,8 +28,10 @@ async def job_progress(
     }
     if 'import' in type:
         url = f'http://{config["pymix"]["addr"]}/beets/import/progress'
+        import_or_export = 'import'
     elif 'export' in type:
         url = f'http://{config["pymix"]["addr"]}/export/progress'
+        import_or_export = 'export'
     else:
         raise ValueError(f'job type {type} does not contain necessary import or export sub string')
 
@@ -42,7 +45,7 @@ async def job_progress(
             context = {"request": request, 'percentage_complete': percentage_complete,
                        "n_tracks_to_process": n_tracks_to_process,
                        "n_tracks_processed": n_tracks_process,
-                       "imported_or_exported": "imported"}
+                       "imported_or_exported": import_or_export}
             if not in_progress and type:
                 resp = templates.TemplateResponse("partials/staging_in_progress.html", context)
                 # this will kick off the import job

@@ -2,7 +2,7 @@
     <h1 class="subtitle is-3">In Progress</h1>
     <section class="section">
         {% if percentage_complete < 100 %}
-          <div class="container" hx-get="/job/progress" hx-target="#results-section" hx-swap="outerHTML" hx-trigger="load delay:2s" hx-vals='{"type": {{ imported_or_exported }}}'>
+          <div class="container" hx-get="/job/progress" hx-target="#results-section" hx-swap="outerHTML" hx-trigger="load delay:1s" hx-vals='{"type": "export"}'>
               <progress class="progress is-success" value="{{ percentage_complete }}" max="100">{{ percentage_complete }}%</progress>
           </div>
         {% endif %}
