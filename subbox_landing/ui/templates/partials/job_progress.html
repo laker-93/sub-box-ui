@@ -2,22 +2,22 @@
     <h1 class="subtitle is-3">In Progress</h1>
     <section class="section">
         {% if percentage_complete < 100 %}
-          <div class="container" hx-get="/job/progress" hx-target="#results-section" hx-swap="outerHTML" hx-trigger="load delay:2s">
+          <div class="container" hx-get="/job/progress" hx-target="#results-section" hx-swap="outerHTML" hx-trigger="load delay:2s" hx-vals='{"type": {{ imported_or_exported }}}'>
               <progress class="progress is-success" value="{{ percentage_complete }}" max="100">{{ percentage_complete }}%</progress>
           </div>
         {% endif %}
-        <p>Imported {{ n_tracks_imported }} out of a total of {{ n_tracks_to_import }} tracks ( {{ percentage_complete }} % ).</p>
+        <p>{{ imported_or_exported }} {{ n_tracks_processed }} out of a total of {{ n_tracks_to_process }} tracks ( {{ percentage_complete }} % ).</p>
         {% if percentage_complete >= 100 %}
-          <p>Import almost complete! Finalising...</p>
+          <p>almost complete! Finalising...</p>
           <img id="spinner" class="loader" src="/imgs/spin">
         {% else %}
-          {% if n_tracks_to_import < 50 %}
+          {% if n_tracks_to_process < 50 %}
           <p>This shouldn't take long.</p>
-          {% elif n_tracks_to_import < 100 %}
+          {% elif n_tracks_to_process < 100 %}
           <p>This may take a few minutes...</p>
-          {% elif n_tracks_to_import < 500 %}
+          {% elif n_tracks_to_process < 500 %}
           <p>This may take a few minutes... Go make a cup of tea.</p>
-          {% elif n_tracks_to_import < 1000 %}
+          {% elif n_tracks_to_process < 1000 %}
           <p>This may take an hour or so... Go for a walk.</p>
           {% endif %}
         {% endif %}

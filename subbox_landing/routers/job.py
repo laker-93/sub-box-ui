@@ -15,7 +15,7 @@ router = APIRouter()
 @inject
 async def job_progress(
         request: Request,
-        type: str | None = None,
+        type: str,
         session_id: str | None = Cookie(None),
         session: ClientSession = Depends(Provide[Container.aiohttp_session]),
         config: Dict = Provide[Container.config]
@@ -25,24 +25,31 @@ async def job_progress(
     data = {
         'session_id': session_id
     }
+    if 'import' in type:
+        url = f'http://{config["pymix"]["addr"]}/beets/import/progress'
+    elif 'export' in type:
+        url = f'http://{config["pymix"]["addr"]}/export/progress'
+    else:
+        raise ValueError(f'job type {type} does not contain necessary import or export sub string')
 
-    async with session.get(f'http://{config["pymix"]["addr"]}/beets/import/progress', params=data) as response:
+    async with session.get(url, params=data) as response:
         if response.status == HTTPStatus.OK:
             response_json = await response.json()
             percentage_complete = response_json['percentage_complete']
-            n_tracks_to_import = response_json['n_tracks_to_import']
-            n_tracks_imported = response_json['n_tracks_imported']
-            import_in_progress = response_json['import_in_progress']
+            n_tracks_to_process = response_json['n_tracks_to_process']
+            n_tracks_process = response_json['n_tracks_processed']
+            in_progress = response_json['in_progress']
             context = {"request": request, 'percentage_complete': percentage_complete,
-                       "n_tracks_to_import": n_tracks_to_import,
-                       "n_tracks_imported": n_tracks_imported}
-            if not import_in_progress and type:
+                       "n_tracks_to_process": n_tracks_to_process,
+                       "n_tracks_processed": n_tracks_process,
+                       "imported_or_exported": "imported"}
+            if not in_progress and type:
                 resp = templates.TemplateResponse("partials/staging_in_progress.html", context)
                 # this will kick off the import job
                 resp.headers['HX-Trigger'] = type
-            elif import_in_progress and percentage_complete == 0:
+            elif in_progress and percentage_complete == 0:
                 resp = templates.TemplateResponse("partials/staging_in_progress.html", context)
-            elif n_tracks_to_import > 0 and 0 < percentage_complete <= 100:
+            elif n_tracks_to_process > 0 and 0 < percentage_complete <= 100:
                 resp = templates.TemplateResponse("partials/job_progress.html", context)
             else:
                 # todo need to handle the case of distinguishing between an import about to start (and hence n_tracks_to_import still coming back 0)
