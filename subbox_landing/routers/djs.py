@@ -117,8 +117,7 @@ async def export_rekordbox(
             status_code = response.status
             if response.status == HTTPStatus.OK:
                 response_json = await response.json()
-                print(response_json)
-                success = True
+                success = response_json['success']
                 n_beets_tracks = response_json['n_beets_tracks']
                 context['n_beets_tracks'] = n_beets_tracks
 
@@ -159,7 +158,7 @@ async def export_serato(
             if response.status == HTTPStatus.OK:
                 response_json = await response.json()
                 print(response_json)
-                success = True
+                success = response_json['success']
                 n_beets_tracks = response_json['n_beets_tracks']
                 context['n_beets_tracks'] = n_beets_tracks
 

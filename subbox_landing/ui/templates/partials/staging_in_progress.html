@@ -1,7 +1,7 @@
 <div id="results-section">
     <h1 class="subtitle is-3">In Progress</h1>
     <section class="section">
-        <div class="container" hx-get="/job/progress" hx-target="#results-section" hx-swap="outerHTML" hx-trigger="load delay:1s" hx-vals='{"type": "{{ import_or_export }}"}'>
+        <div class="container" hx-get="/job/progress" hx-target="#results-section" hx-swap="outerHTML" hx-trigger="load delay:1.5s" hx-vals='{"type": "{{ import_or_export }}"}'>
         </div>
         <p>Staging {{ n_tracks_to_process }} tracks for {{ import_or_export }}...</p>
         {% if n_tracks_to_process < 50 %}
@@ -13,7 +13,7 @@
         {% elif n_tracks_to_process < 1000 %}
         <p>This may take an hour or so... Go have a nap. :)</p>
         {% endif %}
-        <img id="spinner" class="loader" src="/imgs/spin">
+        <progress class="progress is-dark" max="100">0%</progress>
     </section>
 </div>
 
