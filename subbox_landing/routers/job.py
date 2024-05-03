@@ -45,7 +45,7 @@ async def job_progress(
             context = {"request": request, 'percentage_complete': percentage_complete,
                        "n_tracks_to_process": n_tracks_to_process,
                        "n_tracks_processed": n_tracks_process,
-                       "imported_or_exported": import_or_export}
+                       "import_or_export": import_or_export}
             if not in_progress and type:
                 resp = templates.TemplateResponse("partials/staging_in_progress.html", context)
                 # this will kick off the import job

@@ -1,9 +1,9 @@
 <div id="results-section">
     <h1 class="subtitle is-3">In Progress</h1>
     <section class="section">
-        <div class="container" hx-get="/job/progress" hx-target="#results-section" hx-swap="outerHTML" hx-trigger="load delay:1s" hx-vals='{"type": "{{ imported_or_exported }}"}'>
+        <div class="container" hx-get="/job/progress" hx-target="#results-section" hx-swap="outerHTML" hx-trigger="load delay:1s" hx-vals='{"type": "{{ import_or_export }}"}'>
         </div>
-        <p>Staging {{ n_tracks_to_process }} tracks for import...</p>
+        <p>Staging {{ n_tracks_to_process }} tracks for {{ import_or_export }}...</p>
         {% if n_tracks_to_process < 50 %}
         <p>This shouldn't take long. :)</p>
         {% elif n_tracks_to_process < 100 %}

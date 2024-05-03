@@ -2,11 +2,16 @@
     <h1 class="subtitle is-3">In Progress</h1>
     <section class="section">
         {% if percentage_complete < 100 %}
-          <div class="container" hx-get="/job/progress" hx-target="#results-section" hx-swap="outerHTML" hx-trigger="load delay:1s" hx-vals='{"type": "export"}'>
+          <style>
+              .progress::-webkit-progress-value {
+                transition: width 0.5s ease;
+              }
+          </style>
+          <div class="container" hx-get="/job/progress" hx-target="#results-section" hx-swap="outerHTML" hx-trigger="load delay:1s" hx-vals='{"type": "{{ import_or_export }}"}'>
               <progress class="progress is-success" value="{{ percentage_complete }}" max="100">{{ percentage_complete }}%</progress>
           </div>
         {% endif %}
-        <p>{{ imported_or_exported }} {{ n_tracks_processed }} out of a total of {{ n_tracks_to_process }} tracks ( {{ percentage_complete }} % ).</p>
+        <p>{{ import_or_exported }} {{ n_tracks_processed }} out of a total of {{ n_tracks_to_process }} tracks ( {{ percentage_complete }} % ).</p>
         {% if percentage_complete >= 100 %}
           <p>almost complete! Finalising...</p>
           <img id="spinner" class="loader" src="/imgs/spin">
