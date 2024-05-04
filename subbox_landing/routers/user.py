@@ -180,10 +180,12 @@ async def create(
     async with session.post(f'http://{config["pymix"]["addr"]}/user/create', params=data) as response:
         error['status_code'] = response.status
         if response.status == HTTPStatus.OK:
-            response_json = await response.json()
-            session_id = response.cookies.get('session_id').value
-            print(response_json)
-            template = 'partials/success.html'
+            session_id = response.cookies.get('session_id')
+            if session_id:
+                session_id = session_id.value
+                template = 'partials/success.html'
+            else:
+                template = 'partials/max_users.html'
             success = True
         else:
             print(f'error {response.status} {HTTPStatus.OK}')
@@ -197,9 +199,13 @@ async def create(
 
     templates = Jinja2Templates(directory="ui/templates")
     if success:
-        response = JSONResponse(content="ok", status_code=HTTPStatus.OK)
-        print(f'setting cookie to {session_id}')
-        response.set_cookie(key='session_id', value=session_id, httponly=True)
+        if session_id:
+            response = JSONResponse(content="ok", status_code=HTTPStatus.OK)
+            print(f'setting cookie to {session_id}')
+            response.set_cookie(key='session_id', value=session_id, httponly=True)
+        else:
+            context = {"request": request}
+            response = templates.TemplateResponse(template, context)
     else:
         context = {"request": request, "error": error}
         response = templates.TemplateResponse(template, context)
