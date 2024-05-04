@@ -26,22 +26,26 @@
                     Once you have downloaded the zip and xml from subbox to your computer you will need to unzip the audio files in the path you set in the 'local root' box below.
                     Finally, you will need to enable the xml feature in rekordbox and specify the path of the xml. See further instructions below.
                 </p>
+
                 <form id="exportform">
                     <div>
                         <label>local root</label>
                         <input type="text" name="local_root" value="<enter-here>">
                         <p>set the local root for where you will extract the zip on your system. For example: `/Users/bob/subbox`</p>
                     </div>
-                    <p>Note that for a large collection, this could take several minutes.</p>
-                    <!-- todo do some validation here and only show the progress button iff there are uploaded tracks-->
-                    <button class="button is-primary" hx-post="/djs/export/rekordbox" hx-target="#rb-export" hx-indicator="#spinner" hx-swap="outerHTML">
-                        Export
-                        <img id="spinner" class="htmx-indicator loader" src="/imgs/spin">
-                    </button>
+                    <div id="rb-export-content">
+                      <div hx-post="/djs/export/rekordbox" hx-trigger="start-rekordbox-export from:body" hx-target="#rb-export-content" hx-swap="innerHTML" hx-indicator="#spinner">
+                      </div>
+                          <p>Note that for a large collection, this could take several minutes.</p>
+                          <!-- todo do some validation here and only show the progress button iff there are uploaded tracks-->
+                          <div id="export-button">
+                              <button id="start-rb-export" hx-target="#export-button" hx-swap="innerHTML" hx-get="/job/progress" class="button is-primary" hx-vals='{"type": "start-rekordbox-export"}'>
+                                  Export
+                              </button>
+                          </div>
+                    </div>
                 </form>
-                <p>
-                    Once this completes successfully, download the zip <a href="/download">here</a>.
-                </p>
+
                 <h1 class="subtitle is-4">Importing XML in to RekordBox</h1>
                 <p>
                 To do this go to Preferences -> View -> check 'rekordbox xml' in Layout.
@@ -56,6 +60,9 @@
                 </p>
                 <p>
                 <img src="/imgs/rb-import-set-xml-path" width="604" height="448">
+                </p>
+                <p>
+                    You should now see an xml option in the left side bar. Click this and import the tracks and playlists in to your collection.
                 </p>
             </div>
         </div>

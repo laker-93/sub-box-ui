@@ -11,15 +11,22 @@
 </header>
 <section class="section">
     <div class="container">
-        <p>
-            Upload your audio files to subbox.
+        <p>To upload more music to your account, there are two stages to complete.
+        Note if you do not yet have an account with subbox, create one with the sign up button at the top right of this page.
         </p>
+        <ol>
+            <li>Upload your music files (if you are looking to upload from your DJ software, go to the DJ page <a href="/djs">here</a>).</li>
+            <img src="/imgs/upload" width="604" height="448">
+            <li>Once you have uploaded the music files, <a href="/process">process</a> your uploaded tracks. This will cause subbox to process your music tracks, fetch meta information for the tracks, such as album art and lyrics, so that this information appears in the music player.</li>
+            <img src="/imgs/process" width="604" height="448">
+        </ol>
+        <p>Once your tracks are uploaded and processed by subbox, you can stream them <a href="/listen">here</a>.</p>
+        <img src="/imgs/listen" width="604" height="448">
+        <p>To add more music to your collection, repeat steps 1 and 2.</p>
         <p>
-            Note that clicking this button will redirect you to a subsite of subbox. Log in with your subbox credentials and then upload your desired audio tracks.
+            Note that clicking this button will redirect you to a subsite of subbox. Log in with your subbox credentials and then drag and drop your desired audio tracks (upload a zip for faster processing).
         </p>
-        <p>
-            If you do not yet have an account with subbox, create one with the sign up button in the top right of this page.
-        </p>
+
         <div id="content" hx-target="this" hx-swap="outerHTML">
             <button hx-get="/upload/filebrowser" class="button is-primary">
                 upload
