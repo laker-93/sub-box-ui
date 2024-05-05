@@ -8,7 +8,7 @@ from fastapi import Request, Header, APIRouter, Cookie, Form, Depends
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
-from subbox_landing.containers import Container
+from containers import Container
 
 router = APIRouter()
 @router.get("/djs", response_class=HTMLResponse)

@@ -11,7 +11,7 @@ from fastapi import Request, Header, APIRouter, Form, Depends, Cookie
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
-from subbox_landing.containers import Container
+from containers import Container
 
 router = APIRouter()
 
@@ -134,7 +134,7 @@ async def login(
             response_json = await response.json()
             session_id = response.cookies.get('session_id').value
             print(response_json)
-            template = 'partials/success.html'
+            template = 'partials/logged_in.html'
             success = True
         else:
             print(f'error {response.status} {HTTPStatus.OK}')
@@ -147,16 +147,19 @@ async def login(
             error['response'] = response_json
 
     templates = Jinja2Templates(directory="ui/templates")
-
-    context = {"request": request, "error": error}
-
-    html_response = templates.TemplateResponse(template, context)
     if success:
-        response = JSONResponse(content="ok", status_code=HTTPStatus.OK)
+        context = {
+            "request": request,
+            "user": {
+                "username": username
+            }
+        }
+        response = templates.TemplateResponse(template, context)
         print(f'setting cookie to {session_id}')
         response.set_cookie(key='session_id', value=session_id, httponly=True)
     else:
-        response = html_response
+        context = {"request": request, "error": error}
+        response = templates.TemplateResponse(template, context)
     return response
 
 @router.post("/user/create", response_class=HTMLResponse)
@@ -198,13 +201,14 @@ async def create(
             error['response'] = response_json
 
     templates = Jinja2Templates(directory="ui/templates")
+    context = {"request": request}
     if success:
         if session_id:
-            response = JSONResponse(content="ok", status_code=HTTPStatus.OK)
+            #response = JSONResponse(content="ok", status_code=HTTPStatus.OK)
+            response = templates.TemplateResponse(template, context)
             print(f'setting cookie to {session_id}')
             response.set_cookie(key='session_id', value=session_id, httponly=True)
         else:
-            context = {"request": request}
             response = templates.TemplateResponse(template, context)
     else:
         context = {"request": request, "error": error}

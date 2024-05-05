@@ -6,8 +6,8 @@ from fastapi import FastAPI
 from toredocore.logger import initialise_logger
 
 import constants
-from subbox_landing.containers import Container
-from subbox_landing.routers import user, job, about, files, home, upload, djs, process, listen
+from containers import Container
+from routers import user, job, about, files, home, upload, djs, process, listen
 
 
 def create_app():
