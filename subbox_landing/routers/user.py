@@ -173,6 +173,13 @@ async def create(
         config: dict = Depends(Provide[Container.config]),
         session: ClientSession = Depends(Provide[Container.aiohttp_session]),
 ):
+    templates = Jinja2Templates(directory="ui/templates")
+    if any(c.isupper() for c in username):
+        template = 'partials/username_uppercase.html'
+        context = {"request": request, "username": username}
+        response = templates.TemplateResponse(template, context)
+        return response
+
     print(f'username {username} password {password} session id {session_id}')
     data = {
         'username': username,
@@ -200,7 +207,6 @@ async def create(
             template = 'partials/failure.html'
             error['response'] = response_json
 
-    templates = Jinja2Templates(directory="ui/templates")
     context = {"request": request}
     if success:
         if session_id:
