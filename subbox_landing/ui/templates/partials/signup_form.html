@@ -9,25 +9,25 @@
 </header>
 <section class="section">
     <div class="container">
-        <p>Create an account with subbox to start streaming your music files.</p>
-        <p>It will take subbox a minute or two to set everything up so please be patient after clicking the create account button :)</p>
-    </div>
-</section>
-<section class="section">
-    <div class="container">
-        <form id="signupform">
-            <div>
-                <label>username</label>
-                <input type="text" name="username" value="<enter-here>">
+        <div class="container">
+            <div id="signupform">
+                <p>Create an account with subbox to start streaming your music files.</p>
+                <p>It will take subbox a minute or two to set everything up so please be patient after clicking the create account button :)</p>
+                <form>
+                    <div>
+                        <label>username</label>
+                        <input type="text" name="username" value="<enter-here>">
+                    </div>
+                    <div class="form-group">
+                        <label>password</label>
+                        <input type="text" name="password" value="<enter-here>">
+                    </div>
+                    <button class="button is-primary" hx-post="/user/create" hx-target="#signupform" hx-swap="innerHTML" hx-indicator="#spinner">
+                        Create <img id="spinner" class="htmx-indicator loader" src="/imgs/spin">
+                    </button>
+                </form>
             </div>
-            <div class="form-group">
-                <label>password</label>
-                <input type="text" name="password" value="<enter-here>">
-            </div>
-            <button class="button is-primary" hx-post="/user/create" hx-target="#signupform" hx-swap="innerHTML" hx-indicator="#spinner">
-                Create <img id="spinner" class="htmx-indicator loader" src="/imgs/spin">
-            </button>
-        </form>
+        </div>
     </div>
 </section>
 

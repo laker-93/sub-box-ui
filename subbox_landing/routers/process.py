@@ -46,17 +46,21 @@ async def process_beets(
                 success = response_json['success']
                 total_n_imported_tracks = response_json['imported_tracks']
                 beets_output = response_json['beets_output']
+                total_n_tracks_for_import = response_json['n_tracks_for_import']
                 context['total_n_imported_tracks'] = total_n_imported_tracks
                 context['beets_output'] = beets_output
 
     if success:
         template = templates.TemplateResponse("partials/job_results.html", context)
     else:
-        context["error"] = {
-            'status_code': status_code,
-            'response': response_json,
-            'message': f'Failed to complete import job for session id {session_id}'
-        }
-        template = templates.TemplateResponse("partials/generic_failure.html", context)
+        if total_n_tracks_for_import == 0:
+            template = templates.TemplateResponse("partials/empty_uploads.html", context)
+        else:
+            context["error"] = {
+                'status_code': status_code,
+                'response': response_json,
+                'message': f'Failed to complete import job for session id {session_id}'
+            }
+            template = templates.TemplateResponse("partials/generic_failure.html", context)
     return template
 
