@@ -1,12 +1,13 @@
 import asyncio
 import logging
+from argparse import ArgumentParser
 from typing import Dict
 
 from dependency_injector.wiring import Provide
 from uvicorn import Config, Server
 
-from subbox_landing.containers import Container
-from subbox_landing.registration import create_app, create_container
+from containers import Container
+from registration import create_app, create_container
 
 logger = logging.getLogger(__name__)
 
@@ -24,7 +25,10 @@ async def main(loop, app_config: Dict = Provide[Container.config]):
 
 
 if __name__ == '__main__':
-    container = create_container('dev')
+    arg_parser = ArgumentParser()
+    arg_parser.add_argument("-e", "--env", default="dev", help="The environment to run the app with")
+    args = arg_parser.parse_args()
+    container = create_container(args.env)
     container.wire(modules=[__name__])
     loop = asyncio.get_event_loop()
     try:
