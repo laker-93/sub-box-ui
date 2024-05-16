@@ -23,10 +23,14 @@
               <p>
                   once you have uploaded files, click the process music button. This will sort your music, fetch album art etc.
               </p>
-              <!-- todo do some validation here and only show the progress button iff there are uploaded tracks-->
-              <button id="start-upload" hx-target="#job-progress" hx-swap="outerHTML" hx-get="/job/progress" class="button is-primary" hx-vals='{"type": "start-track-import"}'>
-                  process
-              </button>
+              <div class="upload-containers">
+                <label>public</label>
+                <input type="checkbox" id="public" name="public" value="True">
+                <!-- todo do some validation here and only show the progress button iff there are uploaded tracks-->
+                <button id="start-upload" hx-target="#job-progress" hx-swap="outerHTML" hx-get="/job/progress" class="button is-primary" hx-vals='{"type": "start-track-import"}' hx-include="#public">
+                    process
+                </button>
+              </div>
           </div>
         </div>
     </div>

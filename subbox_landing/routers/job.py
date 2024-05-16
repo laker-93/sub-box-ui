@@ -3,7 +3,7 @@ from typing import Dict
 
 from aiohttp import ClientSession
 from dependency_injector.wiring import Provide, inject
-from fastapi import Request, Header, APIRouter, Cookie, Depends
+from fastapi import Request, Header, APIRouter, Cookie, Depends, Form
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
@@ -16,11 +16,12 @@ router = APIRouter()
 async def job_progress(
         request: Request,
         type: str,
+        public: bool | None = False,
         session_id: str | None = Cookie(None),
         session: ClientSession = Depends(Provide[Container.aiohttp_session]),
         config: Dict = Provide[Container.config]
 ):
-    print(f'type {type}')
+    print(f'public {public}')
     templates = Jinja2Templates(directory="ui/templates")
 
     data = {

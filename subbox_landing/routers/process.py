@@ -24,6 +24,7 @@ async def process(request: Request, hx_request: Optional[str] = Header(None)):
 @inject
 async def process_beets(
         request: Request,
+        public: bool = False,
         session_id: str | None = Cookie(None),
         hx_request: Optional[str] = Header(None),
         config: dict = Provide[Container.config],
@@ -37,7 +38,8 @@ async def process_beets(
     response_json = ""
     if session_id or isinstance(session, mock.AsyncMock):
         data = {
-            'session_id': session_id
+            'session_id': session_id,
+            'public': public
         }
         async with session.post(f'http://{config["pymix"]["addr"]}/beets/import', params=data) as response:
             status_code = response.status
