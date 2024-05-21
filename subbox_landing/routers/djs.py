@@ -80,7 +80,7 @@ async def upload_rekordbox(
                 total_n_imported_tracks = response_json['imported_tracks']
                 beets_output = response_json['beets_output']
                 total_n_tracks_for_import = response_json['n_tracks_for_import']
-                context['total_n_imported_tracks'] = total_n_imported_tracks
+                context['n_tracks_for_import'] = total_n_tracks_for_import
                 context['beets_output'] = beets_output
 
     if success:
@@ -205,7 +205,7 @@ async def upload_serato(
                 total_n_imported_tracks = response_json['imported_tracks']
                 total_n_tracks_for_import = response_json['n_tracks_for_import']
                 beets_output = response_json['beets_output']
-                context['total_n_imported_tracks'] = total_n_imported_tracks
+                context['n_tracks_for_import'] = total_n_tracks_for_import
                 context['beets_output'] = beets_output
 
     if success:
