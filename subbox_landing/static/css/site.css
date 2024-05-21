@@ -1,3 +1,4 @@
-.upload-container {
-  padding-block: 200px;
+.select,
+select{
+    width:100%;
 }

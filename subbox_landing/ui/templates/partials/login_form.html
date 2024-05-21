@@ -11,18 +11,22 @@
   <section class="section">
       <div class="container">
           <form>
-              <div>
-                  <label>username</label>
-                  <input type="text" name="username" value="<enter-here>">
+              <div class="column is-3">
+                  <div class="control">
+                      <input class="input" name="username" type="text" placeholder="username">
+                  </div>
               </div>
-              <div class="form-group">
-                  <label>password</label>
-                  <input type="text" name="password" value="<enter-here>">
+              <div class="column is-3">
+                  <div class="control">
+                      <input class="input" name="password" type="text" placeholder="password">
+                  </div>
               </div>
+              <div class="column is-3">
               <button class="button" hx-post="/user/login" hx-swap="outerHTML" hx-target="#login-form" hx-indicator="#spinner">
                   login
                   <span id="spinner" class="htmx-indicator loader"></span>
               </button>
+              </div>
           </form>
       </div>
   </section>
