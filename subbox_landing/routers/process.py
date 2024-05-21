@@ -20,17 +20,28 @@ async def process(request: Request, hx_request: Optional[str] = Header(None)):
     return response
 
 
+
+@router.post("/process/beetspublic", response_class=HTMLResponse)
+@inject
+async def process_beetspublic(
+        request: Request,
+        session_id: str | None = Cookie(None),
+        hx_request: Optional[str] = Header(None)
+):
+    return await process_beets(request, True, session_id, hx_request)
+
 @router.post("/process/beets", response_class=HTMLResponse)
 @inject
 async def process_beets(
         request: Request,
-        public: bool = False,
+        public: bool | None = False,
         session_id: str | None = Cookie(None),
         hx_request: Optional[str] = Header(None),
         config: dict = Provide[Container.config],
         session: ClientSession = Depends(Provide[Container.aiohttp_session]),
 ):
     templates = Jinja2Templates(directory="ui/templates")
+    total_n_tracks_for_import = 0
 
     success = False
     context = {"request": request}
@@ -39,7 +50,7 @@ async def process_beets(
     if session_id or isinstance(session, mock.AsyncMock):
         data = {
             'session_id': session_id,
-            'public': public
+            'public': str(public)
         }
         async with session.post(f'http://{config["pymix"]["addr"]}/beets/import', params=data) as response:
             status_code = response.status
@@ -49,7 +60,7 @@ async def process_beets(
                 total_n_imported_tracks = response_json['imported_tracks']
                 beets_output = response_json['beets_output']
                 total_n_tracks_for_import = response_json['n_tracks_for_import']
-                context['total_n_imported_tracks'] = total_n_imported_tracks
+                context['n_tracks_for_import'] = total_n_tracks_for_import
                 context['beets_output'] = beets_output
 
     if success:

@@ -12,8 +12,10 @@
 <section class="section">
     <div class="container">
         <div id="process-content">
-          <div hx-post="/process/beets" hx-target="#process-content" hx-swap="outerHTML" hx-trigger="start-track-import from:body" hx-indicator="#spinner">
-          </div>
+            <div hx-post="/process/beets" hx-target="#process-content" hx-swap="outerHTML" hx-trigger="start-track-import from:body" hx-indicator="#spinner">
+            </div>
+            <div hx-post="/process/beetspublic" hx-target="#process-content" hx-swap="outerHTML" hx-trigger="start-track-import-public from:body" hx-indicator="#spinner">
+            </div>
           <div id="job-progress">
               <div id="content">
                   <p>
@@ -22,14 +24,19 @@
               </div>
               <p>
                   once you have uploaded files, click the process music button. This will sort your music, fetch album art etc.
+                  Note that this works by attempting to find missing tags and album art work based off existing tags set on the audio files you have uploaded.
+                  In order to expect a match, at a minimum the tracks you have uploaded should atleast have the correct artist and track title set.
               </p>
-              <div class="upload-containers">
-                <label>public</label>
-                <input type="checkbox" id="public" name="public" value="True">
+              <div class="py-2" class="upload-containers">
                 <!-- todo do some validation here and only show the progress button iff there are uploaded tracks-->
-                <button id="start-upload" hx-target="#job-progress" hx-swap="outerHTML" hx-get="/job/progress" class="button is-primary" hx-vals='{"type": "start-track-import"}' hx-include="#public">
-                    process
-                </button>
+                  <div class="py-2">
+                    <input hx-prompt="confirm" type="checkbox" id="public" name="public" value="True">
+                    <label class="px-3" class="py-6">Tick this box to make the upload public so anyone can listen to it.
+                        You must own the rights to the music to do this. Otherwise leave the box unticked.</label>
+                  </div>
+                  <button id="start-upload" hx-target="#job-progress" hx-swap="outerHTML" hx-get="/job/progress" class="button is-primary" hx-vals='{"type": "start-track-import"}' hx-include="#public">
+                      process
+                  </button>
               </div>
           </div>
         </div>

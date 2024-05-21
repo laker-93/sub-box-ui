@@ -16,7 +16,7 @@ router = APIRouter()
 async def job_progress(
         request: Request,
         type: str,
-        public: bool | None = False,
+        public: str | None = False,
         session_id: str | None = Cookie(None),
         session: ClientSession = Depends(Provide[Container.aiohttp_session]),
         config: Dict = Provide[Container.config]
@@ -25,7 +25,8 @@ async def job_progress(
     templates = Jinja2Templates(directory="ui/templates")
 
     data = {
-        'session_id': session_id
+        'session_id': session_id,
+        'public': str(public)
     }
     if 'import' in type:
         url = f'http://{config["pymix"]["addr"]}/beets/import/progress'
@@ -50,6 +51,8 @@ async def job_progress(
             if not in_progress and type:
                 resp = templates.TemplateResponse("partials/staging_in_progress.html", context)
                 # this will kick off the import job
+                if public:
+                    type += '-public'
                 resp.headers['HX-Trigger'] = type
             elif in_progress and percentage_complete == 0:
                 resp = templates.TemplateResponse("partials/staging_in_progress.html", context)
