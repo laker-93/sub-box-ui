@@ -28,17 +28,16 @@
                 </p>
 
                 <form id="exportform">
-                    <div>
-                        <label>local root</label>
-                        <input type="text" name="local_root" value="<enter-here>">
-                        <p>set the local root for where you will extract the zip on your system. For example: `/Users/bob/subbox`</p>
+                    <p>set the local root for where you will extract the zip on your system. For example: `/Users/bob/subbox`</p>
+                    <div class="column is-3">
+                        <input class="input" type="text" name="local_root" placeholder="local root">
                     </div>
                     <div id="rb-export-content">
                       <div hx-post="/djs/export/rekordbox" hx-trigger="start-rekordbox-export from:body" hx-target="#rb-export-content" hx-swap="innerHTML" hx-indicator="#spinner">
                       </div>
                           <p>Note that for a large collection, this could take several minutes.</p>
                           <!-- todo do some validation here and only show the progress button iff there are uploaded tracks-->
-                          <div id="export-button">
+                          <div class="column is-3" id="export-button">
                               <button id="start-rb-export" hx-target="#export-button" hx-swap="innerHTML" hx-get="/job/progress" class="button is-primary" hx-vals='{"type": "start-rekordbox-export"}'>
                                   Export
                               </button>

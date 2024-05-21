@@ -28,16 +28,15 @@
                     Finally, you will need to drag and drop the downloaded serato crates directory from subbox in to your local Serato subcrates directory (by default located at ~/Music/_Serato_/Subcrates).
                 </p>
                 <form id="exportform">
-                    <div>
-                        <label>local root</label>
-                        <input type="text" name="local_root" value="<enter-here>">
-                        <p>set the local root for where you will extract the zip of the audio files on your system. For example: `/Users/bob/subbox`</p>
+                    <p>set the local root for where you will extract the zip of the audio files on your system. For example: `/Users/bob/subbox`</p>
+                    <div class="column is-3">
+                        <input class="input" type="text" name="local_root" placeholder="local root">
                     </div>
                     <div id="serato-export-content">
                       <div hx-post="/djs/export/serato" hx-trigger="start-serato-export from:body" hx-target="#serato-export-content" hx-swap="innerHTML" hx-indicator="#spinner">
                       </div>
                       <!-- todo do some validation here and only show the progress button iff there are uploaded tracks-->
-                      <div id="export-button">
+                      <div class="column is-3" id="export-button">
                           <button id="start-serato-export" hx-target="#export-button" hx-swap="innerHTML" hx-get="/job/progress" class="button is-primary" hx-vals='{"type": "start-serato-export"}'>
                               Export
                           </button>

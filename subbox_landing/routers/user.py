@@ -169,6 +169,7 @@ async def create(
         session_id: str | None = Cookie(None),
         username: str = Form(...),
         password: str = Form(...),
+        email: str = Form(...),
         hx_request: Optional[str] = Header(None),
         config: dict = Depends(Provide[Container.config]),
         session: ClientSession = Depends(Provide[Container.aiohttp_session]),
@@ -183,7 +184,8 @@ async def create(
     print(f'username {username} password {password} session id {session_id}')
     data = {
         'username': username,
-        'password': password
+        'password': password,
+        'email': email
     }
     error = {}
     success = False
