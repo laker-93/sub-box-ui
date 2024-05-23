@@ -170,6 +170,7 @@ async def create(
         username: str = Form(...),
         password: str = Form(...),
         email: str = Form(...),
+        dj: str | None = Form(False),
         hx_request: Optional[str] = Header(None),
         config: dict = Depends(Provide[Container.config]),
         session: ClientSession = Depends(Provide[Container.aiohttp_session]),
@@ -185,7 +186,8 @@ async def create(
     data = {
         'username': username,
         'password': password,
-        'email': email
+        'email': email,
+        'dj': str(dj)
     }
     error = {}
     success = False

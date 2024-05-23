@@ -62,12 +62,13 @@ async def process_beets(
                 total_n_tracks_for_import = response_json['n_tracks_for_import']
                 context['n_tracks_for_import'] = total_n_tracks_for_import
                 context['beets_output'] = beets_output
+                context['reason'] = response_json['reason']
 
     if success:
         template = templates.TemplateResponse("partials/job_results.html", context)
     else:
         if total_n_tracks_for_import == 0:
-            template = templates.TemplateResponse("partials/empty_uploads.html", context)
+            template = templates.TemplateResponse("partials/user_upload_error.html", context)
         else:
             context["error"] = {
                 'status_code': status_code,
