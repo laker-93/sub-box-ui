@@ -87,7 +87,7 @@ async def upload_rekordbox(
         template = templates.TemplateResponse("partials/job_results.html", context)
     else:
         if total_n_tracks_for_import == 0:
-            template = templates.TemplateResponse("partials/empty_uploads.html", context)
+            template = templates.TemplateResponse("partials/user_upload_error.html", context)
         else:
             context["error"] = {
                 'status_code': status_code,
@@ -212,7 +212,7 @@ async def upload_serato(
         template = templates.TemplateResponse("partials/job_results.html", context)
     else:
         if total_n_tracks_for_import == 0:
-            template = templates.TemplateResponse("partials/empty_uploads.html", context)
+            template = templates.TemplateResponse("partials/user_upload_error.html", context)
         else:
             context["error"] = {
                 'status_code': status_code,
