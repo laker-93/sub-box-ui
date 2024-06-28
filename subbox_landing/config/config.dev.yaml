@@ -6,4 +6,4 @@ application_settings:
   app_host: 0.0.0.0
   app_port: 8888
 pymix:
-  addr: 0.0.0.0:8002
+  addr: localhost:8002

@@ -170,7 +170,7 @@ async def create(
         username: str = Form(...),
         password: str = Form(...),
         email: str = Form(...),
-        dj: str | None = Form(False),
+        dj: str | None = Form(True),
         hx_request: Optional[str] = Header(None),
         config: dict = Depends(Provide[Container.config]),
         session: ClientSession = Depends(Provide[Container.aiohttp_session]),
@@ -182,7 +182,7 @@ async def create(
         response = templates.TemplateResponse(template, context)
         return response
 
-    print(f'username {username} password {password} session id {session_id}')
+    print(f'username {username} password {password} session id {session_id} dj {dj}')
     data = {
         'username': username,
         'password': password,
