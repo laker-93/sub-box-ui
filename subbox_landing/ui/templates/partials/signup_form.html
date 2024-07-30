@@ -12,7 +12,6 @@
         <div class="container">
             <div id="signupform">
                 <p>Create an account with subbox.</p>
-                <p>The DJ tick box enables additional features on your account but will take longer to set up. Signing up for a DJ account will enable you to upload and stream your music collection privately as well as import/export from your DJ software to and from sub-box. Other users who intend to just listen to publicly available tracks on sub-box and upload tracks for public consumption can leave the box unchecked.</p>
                 <p>It will take sub-box a minute or so to set everything up so please be patient after clicking the create account button :)</p>
                 <br>
                 <h2 class="subtitle">Sign Up</h2>
@@ -32,13 +31,8 @@
                             <input class="input" name="email" type="text" placeholder="email">
                         </div>
                     </div>
-                    <div class="py-2">
-                        <input type="checkbox" id="dj" name="dj" value="True" checked>
-                        <label class="px-3" class="py-6">DJ tick box (see description above).
-                           </label>
-                    </div>
                     <div class="column is-3">
-                        <button class="button is-primary" hx-post="/user/create" hx-target="#signupform" hx-swap="innerHTML" hx-indicator="#spinner" hx-include="#dj">
+                        <button class="button is-primary" hx-post="/user/create" hx-target="#signupform" hx-swap="innerHTML" hx-indicator="#spinner">
                             Create <img id="spinner" class="htmx-indicator loader" src="/imgs/spin">
                         </button>
                     </div>

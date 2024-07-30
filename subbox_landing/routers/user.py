@@ -170,11 +170,13 @@ async def create(
         username: str = Form(...),
         password: str = Form(...),
         email: str = Form(...),
-        dj: str | None = Form(True),
+        dj: str = "True",
         hx_request: Optional[str] = Header(None),
         config: dict = Depends(Provide[Container.config]),
         session: ClientSession = Depends(Provide[Container.aiohttp_session]),
 ):
+    # disable creating non dj accounts for now.
+    dj = "True"
     templates = Jinja2Templates(directory="ui/templates")
     if any(c.isupper() for c in username):
         template = 'partials/username_uppercase.html'
