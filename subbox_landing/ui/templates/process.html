@@ -31,8 +31,8 @@
                 <!-- todo do some validation here and only show the progress button iff there are uploaded tracks-->
                   <div class="py-2">
                     <input hx-prompt="confirm" type="checkbox" id="public" name="public" value="True">
-                    <label class="px-3" class="py-6">Tick this box to make the upload public so anyone can listen to it.
-                        You must own the rights to the music to do this. Otherwise leave the box unticked.</label>
+                    <label class="px-3" class="py-6">Tick this box if you're uploading a mix and want to make it publicly available.
+                    </label>
                   </div>
                   <button id="start-upload" hx-target="#job-progress" hx-swap="outerHTML" hx-get="/job/progress" class="button is-primary" hx-vals='{"type": "start-track-import"}' hx-include="#public">
                       process
